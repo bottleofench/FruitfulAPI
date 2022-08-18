@@ -1,0 +1,5 @@
+name: FruitfulAPI
+version: '${project.version}'
+main: api.bottleofench.fruitfulapi.FruitfulAPI
+api-version: 1.19
+authors: [ bottleofench ]
