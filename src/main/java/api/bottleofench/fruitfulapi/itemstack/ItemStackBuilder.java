@@ -1,5 +1,6 @@
 package api.bottleofench.fruitfulapi.itemstack;
 
+import api.bottleofench.fruitfulapi.exceptions.ItemStackBuildException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.kyori.adventure.text.Component;
@@ -122,7 +123,7 @@ public class ItemStackBuilder {
                 || item.getType() == Material.LEATHER_CHESTPLATE
                 || item.getType() == Material.LEATHER_LEGGINGS
                 || item.getType() == Material.LEATHER_BOOTS)) {
-            throw new IllegalArgumentException("Material of ItemStack != leather armor!");
+            throw new ItemStackBuildException("Material of ItemStack != leather armor!");
         }
 
         item.editMeta(itemMeta -> {
@@ -137,7 +138,7 @@ public class ItemStackBuilder {
                 || item.getType() == Material.LEATHER_CHESTPLATE
                 || item.getType() == Material.LEATHER_LEGGINGS
                 || item.getType() == Material.LEATHER_BOOTS)) {
-            throw new IllegalArgumentException("Material of ItemStack != leather armor!");
+            throw new ItemStackBuildException("Material of ItemStack != leather armor!");
         }
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         meta.setColor(null);
@@ -147,7 +148,7 @@ public class ItemStackBuilder {
 
     public ItemStackBuilder setTextureOfHead(String texture) {
         if (!item.getType().equals(Material.PLAYER_HEAD)) {
-            throw new IllegalArgumentException("Material of ItemStack != Material.PLAYER_HEAD!");
+            throw new ItemStackBuildException("Material of ItemStack != Material.PLAYER_HEAD!");
         }
         item.editMeta(itemMeta -> {
             SkullMeta headMeta = (SkullMeta) itemMeta;
@@ -166,7 +167,7 @@ public class ItemStackBuilder {
 
     public ItemStackBuilder setMeta(ItemMeta meta) {
         if (!item.setItemMeta(meta)) {
-            throw new IllegalArgumentException("ItemMeta cannot be set correctly!");
+            throw new ItemStackBuildException("ItemMeta cannot be set correctly!");
         }
         return this;
     }
