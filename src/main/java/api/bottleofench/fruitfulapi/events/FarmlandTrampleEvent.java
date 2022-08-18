@@ -28,9 +28,11 @@ public class FarmlandTrampleEvent extends Event implements Cancellable {
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
+    public static HandlerList getHandlerList() { return HANDLER_LIST; }
 
     @Override
     public boolean isCancelled() {

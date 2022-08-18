@@ -34,9 +34,7 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         if (!event.getClickedBlock().getType().equals(Material.FARMLAND)) return;
         FarmlandTrampleEvent e = new FarmlandTrampleEvent(event.getPlayer(), event.getClickedBlock());
         getServer().getPluginManager().callEvent(e);
-        if (e.isCancelled()) {
-            event.setCancelled(true);
-        }
+        if (e.isCancelled()) event.setCancelled(true);
     }
 
     @EventHandler
@@ -51,9 +49,7 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
                 if (!(entity instanceof ItemFrame frame)) continue;
                 ItemFrameCreateEvent e = new ItemFrameCreateEvent(event.getPlayer(), frame);
                 getServer().getPluginManager().callEvent(e);
-                if (e.isCancelled()) {
-                    event.setCancelled(true);
-                }
+                if (e.isCancelled()) event.setCancelled(true);
                 return;
             }
         }, 2);
@@ -65,7 +61,6 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
         FrostWalkerUseEvent e = new FrostWalkerUseEvent(player, event.getNewState().getBlock());
         getServer().getPluginManager().callEvent(e);
-        if (!e.isCancelled()) return;
-        event.setCancelled(true);
+        if (e.isCancelled()) event.setCancelled(true);
     }
 }
