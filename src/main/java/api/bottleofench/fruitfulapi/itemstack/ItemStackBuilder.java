@@ -10,6 +10,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -50,6 +52,9 @@ public class ItemStackBuilder {
     }
 
     public ItemStackBuilder setDamage(int damage) {
+        if (!(item.getItemMeta() instanceof Damageable)) {
+            throw new ItemStackBuildException("ItemMeta of ItemStack isn't instance of Damageable!");
+        }
         item.editMeta(itemMeta -> ((Damageable) item).setDamage(damage));
         return this;
     }
@@ -169,6 +174,11 @@ public class ItemStackBuilder {
         return this;
     }
 
+    public ItemStackBuilder editMeta(Consumer<ItemMeta> meta) {
+        meta.accept(item.getItemMeta());
+        return this;
+    }
+
     public ItemStackBuilder editPersistentDataContainer(Consumer<PersistentDataContainer> dataContainerConsumer) {
         dataContainerConsumer.accept(item.getItemMeta().getPersistentDataContainer());
         return this;
@@ -195,6 +205,64 @@ public class ItemStackBuilder {
         });
         return this;
     }
+
+    public ItemStackBuilder setPotionColor(Color color) {
+        if (!(item.getType().equals(Material.POTION) ||
+                item.getType().equals(Material.LINGERING_POTION) ||
+                item.getType().equals(Material.SPLASH_POTION))) {
+            throw new ItemStackBuildException("ItemStack type is not a potion!");
+        }
+
+        item.editMeta(itemMeta -> {
+            PotionMeta meta = (PotionMeta) itemMeta;
+            meta.setColor(color);
+        });
+        return this;
+    }
+
+    public ItemStackBuilder setBasePotionData(PotionData data) {
+        if (!(item.getType().equals(Material.POTION) ||
+                item.getType().equals(Material.LINGERING_POTION) ||
+                item.getType().equals(Material.SPLASH_POTION))) {
+            throw new ItemStackBuildException("ItemStack type is not a potion!");
+        }
+
+        item.editMeta(itemMeta -> {
+            PotionMeta meta = (PotionMeta) itemMeta;
+            meta.setBasePotionData(data);
+        });
+        return this;
+    }
+
+    public ItemStackBuilder setCustomEffects(boolean override, PotionEffect... effects) {
+        if (!(item.getType().equals(Material.POTION) ||
+                item.getType().equals(Material.LINGERING_POTION) ||
+                item.getType().equals(Material.SPLASH_POTION))) {
+            throw new ItemStackBuildException("ItemStack type is not a potion!");
+        }
+
+        item.editMeta(itemMeta -> {
+            PotionMeta meta = (PotionMeta) itemMeta;
+            meta.clearCustomEffects();
+            List.of(effects).forEach(potionEffect -> meta.addCustomEffect(potionEffect, override));
+        });
+        return this;
+    }
+
+    public ItemStackBuilder addCustomEffects(boolean override, PotionEffect... effects) {
+        if (!(item.getType().equals(Material.POTION) ||
+                item.getType().equals(Material.LINGERING_POTION) ||
+                item.getType().equals(Material.SPLASH_POTION))) {
+            throw new ItemStackBuildException("ItemStack type is not a potion!");
+        }
+
+        item.editMeta(itemMeta -> {
+            PotionMeta meta = (PotionMeta) itemMeta;
+            List.of(effects).forEach(potionEffect -> meta.addCustomEffect(potionEffect, override));
+        });
+        return this;
+    }
+
     public ItemStack build() {
         return item;
     }
