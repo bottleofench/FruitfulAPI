@@ -86,6 +86,11 @@ public class ItemStackBuilder implements Listener {
         return this;
     }
 
+    public ItemStackBuilder removeItemFlags(ItemFlag... flags) {
+        item.removeItemFlags(flags);
+        return this;
+    }
+
     public ItemStackBuilder setEnchantments(int level, Enchantment... enchantments) {
         item.getEnchantments().clear();
         for (Enchantment enchantment : enchantments) {
@@ -288,7 +293,6 @@ public class ItemStackBuilder implements Listener {
     @EventHandler
     private void handleInteract(PlayerInteractEvent event) {
         if (!Objects.equals(event.getItem(), item)) return;
-
         interactHandlers.forEach(eventConsumer -> eventConsumer.accept(event));
     }
 
