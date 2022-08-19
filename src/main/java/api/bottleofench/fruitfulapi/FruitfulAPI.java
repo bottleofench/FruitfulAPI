@@ -1,17 +1,12 @@
 package api.bottleofench.fruitfulapi;
 
-import api.bottleofench.fruitfulapi.entity.EntityBuilder;
 import api.bottleofench.fruitfulapi.events.FarmlandTrampleEvent;
 import api.bottleofench.fruitfulapi.events.FrostWalkerUseEvent;
 import api.bottleofench.fruitfulapi.events.ItemFrameCreateEvent;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

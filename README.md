@@ -142,6 +142,4 @@ main: api.bottleofench.megatestplugin.MegaTestPlugin
 api-version: 1.19
 depend:
   - FruitfulAPI
-softdepend:
-  - FruitfulAPI
 ```
