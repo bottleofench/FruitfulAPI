@@ -1,12 +1,17 @@
 package api.bottleofench.fruitfulapi;
 
+import api.bottleofench.fruitfulapi.entity.EntityBuilder;
 import api.bottleofench.fruitfulapi.events.FarmlandTrampleEvent;
 import api.bottleofench.fruitfulapi.events.FrostWalkerUseEvent;
 import api.bottleofench.fruitfulapi.events.ItemFrameCreateEvent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,13 +24,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class FruitfulAPI extends JavaPlugin implements Listener {
 
-    @Override
-    public void onEnable() {
-        getServer().getPluginManager().registerEvents(this, this);
-    }
+    private static JavaPlugin instance;
 
     @Override
-    public void onDisable() {}
+    public void onEnable() {
+        instance = this;
+
+        getServer().getPluginManager().registerEvents(this, this);
+
+        new EntityBuilder(EntityType.ZOMBIE)
+                .setCustomName(Component.text("Fire Zombie"))
+                .setVisualFire(true)
+                .addAttackListener(onDeath -> {
+                    onDeath.getEntity().setFireTicks(100);
+                })
+                .spawnAt(location);
+    }
 
     @EventHandler
     public void onFarmlandTrample(PlayerInteractEvent event) {
@@ -64,5 +78,9 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         FrostWalkerUseEvent e = new FrostWalkerUseEvent(player, event.getNewState().getBlock());
         getServer().getPluginManager().callEvent(e);
         if (e.isCancelled()) event.setCancelled(true);
+    }
+
+    public static JavaPlugin getInstance() {
+        return instance;
     }
 }

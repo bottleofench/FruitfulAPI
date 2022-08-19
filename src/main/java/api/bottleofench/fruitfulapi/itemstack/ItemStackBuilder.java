@@ -1,40 +1,51 @@
 package api.bottleofench.fruitfulapi.itemstack;
 
+import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.ItemStackBuildException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.event.Listener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
-public class ItemStackBuilder {
+public class ItemStackBuilder implements Listener {
     private ItemStack item;
+    private List<Consumer<PlayerInteractEvent>> interactHandlers = new ArrayList<>();
 
     public ItemStackBuilder(Material itemType) {
         item = new ItemStack(itemType);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public ItemStackBuilder(ItemStack itemStack) {
         item = itemStack;
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
+    }
+
+    public ItemStackBuilder(Material itemType, int amount) {
+        item = new ItemStack(itemType, amount);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public ItemStackBuilder() {
         item = new ItemStack(Material.AIR);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public ItemStackBuilder setType(Material material) {
@@ -267,6 +278,18 @@ public class ItemStackBuilder {
             List.of(effects).forEach(potionEffect -> meta.addCustomEffect(potionEffect, override));
         });
         return this;
+    }
+
+    public ItemStackBuilder addInteractHandler(Consumer<PlayerInteractEvent> onInteract) {
+        interactHandlers.add(onInteract);
+        return this;
+    }
+
+    @EventHandler
+    private void handleInteract(PlayerInteractEvent event) {
+        if (!Objects.equals(event.getItem(), item)) return;
+
+        interactHandlers.forEach(eventConsumer -> eventConsumer.accept(event));
     }
 
     public ItemStack build() {

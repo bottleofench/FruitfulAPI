@@ -1,5 +1,6 @@
 package api.bottleofench.fruitfulapi.inventory;
 
+import api.bottleofench.fruitfulapi.FruitfulAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,34 +27,42 @@ public class InventoryBuilder implements Listener {
 
     public InventoryBuilder() {
         inventory = Bukkit.createInventory(null, defaultInventorySize);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(int size) {
         inventory = Bukkit.createInventory(null, size);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(InventoryHolder holder) {
         inventory = Bukkit.createInventory(holder, defaultInventorySize);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(InventoryHolder holder, int size) {
         inventory = Bukkit.createInventory(holder, size);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(InventoryHolder holder, InventoryType type) {
         inventory = Bukkit.createInventory(holder, type);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(InventoryHolder holder, InventoryType type, Component title) {
         inventory = Bukkit.createInventory(holder, type, title);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(InventoryHolder holder, int size, Component title) {
         inventory = Bukkit.createInventory(holder, size, title);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder(Component title) {
         inventory = Bukkit.createInventory(null, defaultInventorySize, title);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public InventoryBuilder setItem(int index, ItemStack itemStack) {
@@ -78,23 +87,23 @@ public class InventoryBuilder implements Listener {
         return this;
     }
 
-    public InventoryBuilder addInventoryClickHandler(Consumer<InventoryClickEvent> eventConsumer) {
-        clickHandlers.add(eventConsumer);
+    public InventoryBuilder addInventoryClickHandler(Consumer<InventoryClickEvent> onInventoryClick) {
+        clickHandlers.add(onInventoryClick);
         return this;
     }
 
-    public InventoryBuilder addItemClickHandler(int rawSlot, Consumer<InventoryClickEvent> eventConsumer) {
-        itemHandlers.put(rawSlot, eventConsumer);
+    public InventoryBuilder addItemClickHandler(int rawSlot, Consumer<InventoryClickEvent> onItemClick) {
+        itemHandlers.put(rawSlot, onItemClick);
         return this;
     }
 
-    public InventoryBuilder addOpenHandler(Consumer<InventoryOpenEvent> eventConsumer) {
-        openHandlers.add(eventConsumer);
+    public InventoryBuilder addOpenHandler(Consumer<InventoryOpenEvent> onOpen) {
+        openHandlers.add(onOpen);
         return this;
     }
 
-    public InventoryBuilder addCloseHandler(Consumer<InventoryCloseEvent> eventConsumer) {
-        closeHandlers.add(eventConsumer);
+    public InventoryBuilder addCloseHandler(Consumer<InventoryCloseEvent> onClose) {
+        closeHandlers.add(onClose);
         return this;
     }
 
@@ -108,24 +117,24 @@ public class InventoryBuilder implements Listener {
     }
 
     @EventHandler
-    private void handleClick(InventoryClickEvent e) {
-        if (!Objects.equals(e.getClickedInventory(), inventory)) return;
+    private void handleClick(InventoryClickEvent event) {
+        if (!Objects.equals(event.getClickedInventory(), inventory)) return;
 
-        clickHandlers.forEach(c -> c.accept(e));
+        clickHandlers.forEach(c -> c.accept(event));
 
-        Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(e.getRawSlot());
-        if (clickConsumer != null) clickConsumer.accept(e);
+        Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(event.getRawSlot());
+        if (clickConsumer != null) clickConsumer.accept(event);
     }
 
     @EventHandler
-    private void handleOpen(InventoryOpenEvent e) {
-        if (!e.getInventory().equals(inventory)) return;
-        openHandlers.forEach(c -> c.accept(e));
+    private void handleOpen(InventoryOpenEvent event) {
+        if (!event.getInventory().equals(inventory)) return;
+        openHandlers.forEach(c -> c.accept(event));
     }
 
     @EventHandler
-    private void handleClose(InventoryCloseEvent e) {
-        if (!e.getInventory().equals(inventory)) return;
-        closeHandlers.forEach(c -> c.accept(e));
+    private void handleClose(InventoryCloseEvent event) {
+        if (!event.getInventory().equals(inventory)) return;
+        closeHandlers.forEach(c -> c.accept(event));
     }
 }

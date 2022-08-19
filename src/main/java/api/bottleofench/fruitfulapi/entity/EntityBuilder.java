@@ -1,15 +1,32 @@
 package api.bottleofench.fruitfulapi.entity;
 
+import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.EntityBuildException;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 
-public class EntityBuilder {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+public class EntityBuilder implements Listener {
     private Entity entity;
+    private List<Consumer<EntityDeathEvent>> deathHandlers = new ArrayList<>();
+    private List<Consumer<EntityTargetEvent>> targetHandlers = new ArrayList<>();
+    private List<Consumer<EntityDamageEvent>> damageHandlers = new ArrayList<>();
+    private List<Consumer<EntityDamageByEntityEvent>> attackHandlers = new ArrayList<>();
+
 
     public EntityBuilder(EntityType entityType) {
         if (entityType == null) {
@@ -21,6 +38,7 @@ public class EntityBuilder {
         }
 
         this.entity = entityType.getEntityClass().cast(Entity.class);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
     public EntityBuilder setInvulnerable(boolean flag) {
@@ -76,6 +94,14 @@ public class EntityBuilder {
         return this;
     }
 
+    public EntityBuilder setAttributeBaseValue(Attribute attribute, double value) {
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new EntityBuildException("setAttributeBaseValue() was not successfully executed because entity isn't instance of LivingEntity!");
+        }
+        livingEntity.getAttribute(attribute).setBaseValue(value);
+        return this;
+    }
+
     public EntityBuilder setInvisible(boolean flag) {
         if (!(entity instanceof LivingEntity livingEntity)) {
             throw new EntityBuildException("setInvisible() was not successfully executed because entity isn't instance of LivingEntity!");
@@ -108,11 +134,61 @@ public class EntityBuilder {
         return this;
     }
 
-    public boolean spawnAt(Location location) {
-        return entity.spawnAt(location);
+    public EntityBuilder setPassenger(Entity passenger) {
+        entity.addPassenger(passenger);
+        return this;
     }
 
     public Entity build() {
         return entity;
     }
+
+    public EntityBuilder addDeathListener(Consumer<EntityDeathEvent> onDeath) {
+        deathHandlers.add(onDeath);
+        return this;
+    }
+
+    public EntityBuilder addTargetListener(Consumer<EntityTargetEvent> onTarget) {
+        targetHandlers.add(onTarget);
+        return this;
+    }
+
+    public EntityBuilder addDamageListener(Consumer<EntityDamageEvent> onDamage) {
+        damageHandlers.add(onDamage);
+        return this;
+    }
+
+    public EntityBuilder addAttackListener(Consumer<EntityDamageByEntityEvent> onAttack) {
+        attackHandlers.add(onAttack);
+        return this;
+    }
+
+    @EventHandler
+    private void onDeath(EntityDeathEvent event) {
+        if (!event.getEntity().equals(entity)) return;
+        deathHandlers.forEach(deathHandler -> deathHandler.accept(event));
+    }
+
+    @EventHandler
+    private void onTarget(EntityTargetEvent event) {
+        if (!event.getEntity().equals(entity)) return;
+        targetHandlers.forEach(targetHandlers -> targetHandlers.accept(event));
+    }
+
+    @EventHandler
+    private void onDamage(EntityDamageEvent event) {
+        if (!event.getEntity().equals(entity)) return;
+        damageHandlers.forEach(damageHandler -> damageHandler.accept(event));
+    }
+
+    @EventHandler
+    private void onAttack(EntityDamageByEntityEvent event) {
+        if (!event.getDamager().equals(entity)) return;
+        attackHandlers.forEach(attackHandler -> attackHandler.accept(event));
+    }
+
+    public boolean spawnAt(Location location) {
+        return entity.spawnAt(location);
+    }
+
 }

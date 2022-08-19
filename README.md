@@ -7,22 +7,95 @@ An additional API that simplifies and extends the Spigot / Paper API.
 ## Features
 
 ### Simple ItemStackBuilder
+ItemStackBuilder is a class that makes it easy to create ItemStacks.
 
-Soon...
+The class supports most operations with ItemStacks, including listening to events involving a created ItemStack.
 
-### Simple BlockEditor
+#### Examples
 
-Soon...
+```java
+ItemStack item = new ItemStackBuilder(Material.STONE_SWORD, 100)
+    .setDisplayName(Component.text("The Biggest Sword In The World!"))
+    .setDamage(new Random().nextInt(1, 20))
+    .build();
+```
+
+```java
+ItemStack item = new ItemStackBuilder(Material.WRITTEN_BOOK)
+    .addPages(Component.text("Page 1"), Component.text("Page 2")/*, ... */)
+    .build();
+```
+
+```java
+ItemStack item = new ItemStackBuilder(Material.STONE_SWORD).addInteractHandler(onInteract -> {
+    onInteract.setCancelled(true);
+    onInteract.getPlayer().sendMessage(Component.text("Hello!"));
+}).build();
+```
 
 ### Simple InventoryBuilder
+InventoryBuilder is a class that makes it easy to create Bukkit inventories.
 
-Soon...
+The class supports most operations with inventories, including listening to events involving a created inventory.
+
+#### Examples
+
+```java
+Inventory inventory = new InventoryBuilder(Component.text("Super Mega Plugin Menu"))
+    .addOpenHandler(onOpen -> onOpen.getPlayer().sendMessage(Component.text("Menu is opened!")))
+    .addCloseHandler(onClose -> onClose.getPlayer().sendMessage(Component.text("Menu is closed!")))
+    .addInventoryClickHandler(onInventoryClick -> onInventoryClick.setCancelled(true))
+    .build();
+```
+
+```java
+Inventory inventory = new InventoryBuilder(Component.text("default title"))
+    .setItem(0, new ItemStackBuilder(Material.BARRIER)
+    .setDisplayName(Component.text("Don't touch this!")).build(), onClick -> {
+        onClick.getWhoClicked().sendMessage(Component.text("Don't touch this!"));
+    }).build();
+```
 
 ### Simple EntityBuilder
+EntityBuilder is a class that makes it easy to spawn entities.
 
-Soon...
+The class supports most operations with entities, including listening to events involving a created entity.
+
+#### Examples
+
+```java
+new EntityBuilder(EntityType.ZOMBIE)
+    .setCustomName(Component.text("Super Zombie"))
+    .setHealth(100).setMaxHealth(100)
+    .setVisualFire(true)
+    .addDeathListener(onDeath -> {
+        onDeath.setCancelled(true);
+        onDeath.getEntity().getWorld().playSound(
+                onDeath.getEntity().getEyeLocation(), Sound.ITEM_TOTEM_USE, 1, 1
+        );
+    })
+    .spawnAt(location);
+```
+
+```java
+new EntityBuilder(EntityType.ZOMBIE)
+    .setCustomName(Component.text("Fire Zombie"))
+    .setVisualFire(true)
+    .addAttackListener(onDeath -> {
+        onDeath.getEntity().setFireTicks(100);
+    })
+    .spawnAt(location);
+```
 
 ### Custom Events
+
+1. FarmlandTrampleEvent fires when a player tries to trample a farmland.
+2. FrostWalkerUseEvent fires when the player transforms a block of water into ice when he is wearing boots with a "Frost Walker" enchantment.
+3. ItemFrameCreateEvent fires when a player sets the item frame on a block.
+
+You should listen to custom events just as you listen to normal vanilla events.
+
+### Simple BlockEditor
 
 Soon...
 
@@ -72,11 +145,3 @@ depend:
 softdepend:
   - FruitfulAPI
 ```
-
-## API Examples
-
-Soon...
-
-## TODOs
-
-- Сomplete the README.md;
