@@ -35,8 +35,8 @@ public class EntityBuilder implements Listener {
             throw new EntityBuildException("EntityType cannot be null!");
         }
 
-        if (entityType.getEntityClass() == null) {
-            throw new EntityBuildException("Entity class cannot be null!");
+        if (location == null) {
+            throw new EntityBuildException("Location cannot be null!");
         }
 
         entity = location.getWorld().spawnEntity(location, entityType);

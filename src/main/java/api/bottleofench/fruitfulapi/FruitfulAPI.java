@@ -29,7 +29,7 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onFarmlandTrample(PlayerInteractEvent event) {
+    private void onFarmlandTrample(PlayerInteractEvent event) {
         if (!(event.getAction().equals(Action.PHYSICAL))) return;
         if (event.getClickedBlock() == null) return;
         if (!event.getClickedBlock().getType().equals(Material.FARMLAND)) return;
@@ -39,7 +39,7 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onItemFrameItemPlace(PlayerInteractEvent event) {
+    private void onItemFrameItemPlace(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getClickedBlock() == null) return;
@@ -59,7 +59,7 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onFrostWalkerUse(EntityBlockFormEvent event) {
+    private void onFrostWalkerUse(EntityBlockFormEvent event) {
         if (!event.getNewState().getType().equals(Material.FROSTED_ICE)) return;
         if (!(event.getEntity() instanceof Player player)) return;
         FrostWalkerUseEvent e = new FrostWalkerUseEvent(player, event.getNewState().getBlock());
