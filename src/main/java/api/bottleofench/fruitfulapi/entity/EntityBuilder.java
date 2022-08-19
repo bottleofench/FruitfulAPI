@@ -30,7 +30,7 @@ public class EntityBuilder implements Listener {
     private List<Consumer<EntityDamageByEntityEvent>> attackHandlers = new ArrayList<>();
 
 
-    public EntityBuilder(EntityType entityType) {
+    public EntityBuilder(EntityType entityType, Location location) {
         if (entityType == null) {
             throw new EntityBuildException("EntityType cannot be null!");
         }
@@ -39,7 +39,7 @@ public class EntityBuilder implements Listener {
             throw new EntityBuildException("Entity class cannot be null!");
         }
 
-        this.entity = entityType.getEntityClass().cast(Entity.class);
+        entity = location.getWorld().spawnEntity(location, entityType);
         Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
@@ -167,23 +167,23 @@ public class EntityBuilder implements Listener {
         return entity;
     }
 
-    public EntityBuilder addDeathListener(Consumer<EntityDeathEvent> onDeath) {
-        deathHandlers.add(onDeath);
+    public EntityBuilder addDeathListener(Consumer<EntityDeathEvent> deathEventConsumer) {
+        deathHandlers.add(deathEventConsumer);
         return this;
     }
 
-    public EntityBuilder addTargetListener(Consumer<EntityTargetEvent> onTarget) {
-        targetHandlers.add(onTarget);
+    public EntityBuilder addTargetListener(Consumer<EntityTargetEvent> targetEventConsumer) {
+        targetHandlers.add(targetEventConsumer);
         return this;
     }
 
-    public EntityBuilder addDamageListener(Consumer<EntityDamageEvent> onDamage) {
-        damageHandlers.add(onDamage);
+    public EntityBuilder addDamageListener(Consumer<EntityDamageEvent> damageEventConsumer) {
+        damageHandlers.add(damageEventConsumer);
         return this;
     }
 
-    public EntityBuilder addAttackListener(Consumer<EntityDamageByEntityEvent> onAttack) {
-        attackHandlers.add(onAttack);
+    public EntityBuilder addAttackListener(Consumer<EntityDamageByEntityEvent> damageByEntityEventConsumer) {
+        attackHandlers.add(damageByEntityEventConsumer);
         return this;
     }
 
@@ -209,10 +209,6 @@ public class EntityBuilder implements Listener {
     private void onAttack(EntityDamageByEntityEvent event) {
         if (!event.getDamager().equals(entity)) return;
         attackHandlers.forEach(attackHandler -> attackHandler.accept(event));
-    }
-
-    public boolean spawnAt(Location location) {
-        return entity.spawnAt(location);
     }
 
 }

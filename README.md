@@ -64,7 +64,7 @@ The class supports most operations with entities, including listening to events 
 #### Examples
 
 ```java
-new EntityBuilder(EntityType.ZOMBIE)
+new EntityBuilder(EntityType.ZOMBIE, location)
     .setCustomName(Component.text("Super Zombie"))
     .setHealth(100).setMaxHealth(100)
     .setVisualFire(true)
@@ -73,18 +73,16 @@ new EntityBuilder(EntityType.ZOMBIE)
         onDeath.getEntity().getWorld().playSound(
                 onDeath.getEntity().getEyeLocation(), Sound.ITEM_TOTEM_USE, 1, 1
         );
-    })
-    .spawnAt(location);
+    });
 ```
 
 ```java
-new EntityBuilder(EntityType.ZOMBIE)
+new EntityBuilder(EntityType.ZOMBIE, location)
     .setCustomName(Component.text("Fire Zombie"))
     .setVisualFire(true)
     .addAttackListener(onDeath -> {
         onDeath.getEntity().setFireTicks(100);
-    })
-    .spawnAt(location);
+    });
 ```
 
 ### Custom Events
