@@ -3,15 +3,13 @@ package api.bottleofench.fruitfulapi.itemstack;
 import api.bottleofench.fruitfulapi.exceptions.ItemStackBuildException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,8 +40,8 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setAmount(Integer itemAmt) {
-        item.setAmount(itemAmt);
+    public ItemStackBuilder setAmount(int amount) {
+        item.setAmount(amount);
         return this;
     }
 
@@ -146,7 +144,7 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setTextureOfHead(String texture) {
+    public ItemStackBuilder setPlayerHeadTexture(String texture) {
         if (!item.getType().equals(Material.PLAYER_HEAD)) {
             throw new ItemStackBuildException("Material of ItemStack != Material.PLAYER_HEAD!");
         }
@@ -177,6 +175,27 @@ public class ItemStackBuilder {
         return this;
     }
 
+    public ItemStackBuilder addPages(Component... pages) {
+        if (!item.getType().equals(Material.WRITTEN_BOOK)) {
+            throw new ItemStackBuildException("ItemStack type is not a book!");
+        }
+        item.editMeta(itemMeta -> {
+            BookMeta meta = (BookMeta) itemMeta;
+            meta.addPages(pages);
+        });
+        return this;
+    }
+
+    public ItemStackBuilder setPage(int id, Component page) {
+        if (!item.getType().equals(Material.WRITTEN_BOOK)) {
+            throw new ItemStackBuildException("ItemStack type is not a book!");
+        }
+        item.editMeta(itemMeta -> {
+            BookMeta meta = (BookMeta) itemMeta;
+            meta.page(id, page);
+        });
+        return this;
+    }
     public ItemStack build() {
         return item;
     }

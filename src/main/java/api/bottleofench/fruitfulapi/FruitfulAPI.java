@@ -43,6 +43,8 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getClickedBlock() == null) return;
         if (event.getItem() == null) return;
+        if (!(event.getItem().getType().equals(Material.ITEM_FRAME) ||
+                event.getItem().getType().equals(Material.GLOW_ITEM_FRAME))) return;
         Location loc = event.getInteractionPoint();
         Bukkit.getScheduler().runTaskLater(this, () -> {
             for (Entity entity : loc.getNearbyEntities(0.5, 0.5, 0.5)) {
