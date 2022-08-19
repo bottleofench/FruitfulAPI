@@ -95,7 +95,7 @@ You should listen to custom events just as you listen to normal vanilla events.
 
 ## Working with API
 
-1. Add our API as a library to your project. There are three ways to do this: using Maven / Gradle or manually adding a jar file to your project.
+1. Add our API as a library to your project. There are two ways to do this: using Maven / Gradle.
 
 ### Maven
 
