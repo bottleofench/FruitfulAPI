@@ -3,7 +3,6 @@ package api.bottleofench.fruitfulapi.itemstack;
 import api.bottleofench.fruitfulapi.exceptions.ItemStackBuildException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -65,7 +64,7 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setEnchantments(Enchantment[] enchantments, int level) {
+    public ItemStackBuilder setEnchantments(int level, Enchantment... enchantments) {
         item.getEnchantments().clear();
         for (Enchantment enchantment : enchantments) {
             item.addUnsafeEnchantment(enchantment, level);
@@ -73,7 +72,7 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setEnchantments(Enchantment[] enchantments) {
+    public ItemStackBuilder setEnchantments(Enchantment... enchantments) {
         item.getEnchantments().clear();
         for(Enchantment enchantment : enchantments) {
             item.addUnsafeEnchantment(enchantment, 1);
@@ -106,8 +105,8 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setLore(List<Component> lore) {
-        item.editMeta(itemMeta -> itemMeta.lore(lore));
+    public ItemStackBuilder setLore(Component... lore) {
+        item.editMeta(itemMeta -> itemMeta.lore(List.of(lore)));
         return this;
     }
 

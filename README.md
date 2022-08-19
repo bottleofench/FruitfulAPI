@@ -10,7 +10,15 @@ An additional API that simplifies and extends the Spigot / Paper API.
 
 Soon...
 
-### Simple BlockDataEditor
+### Simple BlockEditor
+
+Soon...
+
+### Simple InventoryBuilder
+
+Soon...
+
+### Simple EntityBuilder
 
 Soon...
 
@@ -72,5 +80,3 @@ Soon...
 ## TODOs
 
 - Сomplete the README.md;
-- Create a simple InventoryBuilder;
-- Create a simple EntityBuilder.

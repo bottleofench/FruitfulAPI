@@ -3,6 +3,7 @@ package api.bottleofench.fruitfulapi;
 import api.bottleofench.fruitfulapi.events.FarmlandTrampleEvent;
 import api.bottleofench.fruitfulapi.events.FrostWalkerUseEvent;
 import api.bottleofench.fruitfulapi.events.ItemFrameCreateEvent;
+import api.bottleofench.fruitfulapi.inventory.InventoryBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
