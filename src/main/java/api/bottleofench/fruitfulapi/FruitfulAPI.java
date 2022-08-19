@@ -31,14 +31,6 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         instance = this;
 
         getServer().getPluginManager().registerEvents(this, this);
-
-        new EntityBuilder(EntityType.ZOMBIE)
-                .setCustomName(Component.text("Fire Zombie"))
-                .setVisualFire(true)
-                .addAttackListener(onDeath -> {
-                    onDeath.getEntity().setFireTicks(100);
-                })
-                .spawnAt(location);
     }
 
     @EventHandler
