@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -59,13 +60,18 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setEnchantment(Enchantment enchantment, int level) {
+    public ItemStackBuilder addEnchantment(Enchantment enchantment, int level) {
         item.addUnsafeEnchantment(enchantment, level);
         return this;
     }
 
-    public ItemStackBuilder setEnchantment(Enchantment enchantment) {
+    public ItemStackBuilder addEnchantment(Enchantment enchantment) {
         item.addUnsafeEnchantment(enchantment, 1);
+        return this;
+    }
+
+    public ItemStackBuilder addItemFlags(ItemFlag... flags) {
+        item.addItemFlags(flags);
         return this;
     }
 

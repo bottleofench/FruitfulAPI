@@ -61,6 +61,18 @@ public class InventoryBuilder implements Listener {
         return this;
     }
 
+    public InventoryBuilder setItem(int index, ItemStack itemStack, Consumer<InventoryClickEvent>... consumers) {
+        inventory.setItem(index, itemStack);
+        List.of(consumers).forEach(inventoryClickEventConsumer -> itemHandlers.put(index, inventoryClickEventConsumer));
+        return this;
+    }
+
+    public InventoryBuilder removeItem(int index) {
+        inventory.setItem(index, null);
+        itemHandlers.remove(index);
+        return this;
+    }
+
     public InventoryBuilder addItems(ItemStack... itemStacks) {
         inventory.addItem(itemStacks);
         return this;
