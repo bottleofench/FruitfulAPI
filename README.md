@@ -6,7 +6,7 @@ An additional API that simplifies and extends the Spigot / Paper API.
 
 ## Features
 
-### Simple ItemStackBuilder
+### ItemStackBuilder
 ItemStackBuilder is a class that makes it easy to create ItemStacks.
 
 The class supports most operations with ItemStacks, including listening to events involving a created ItemStack.
@@ -33,7 +33,7 @@ ItemStack item = new ItemStackBuilder(Material.STONE_SWORD).addInteractHandler(o
 }).build();
 ```
 
-### Simple InventoryBuilder
+### InventoryBuilder
 InventoryBuilder is a class that makes it easy to create Bukkit inventories.
 
 The class supports most operations with inventories, including listening to events involving a created inventory.
@@ -56,7 +56,7 @@ Inventory inventory = new InventoryBuilder(Component.text("default title"))
     }).build();
 ```
 
-### Simple EntityBuilder
+### EntityBuilder
 EntityBuilder is a class that makes it easy to spawn entities.
 
 The class supports most operations with entities, including listening to events involving a created entity.
