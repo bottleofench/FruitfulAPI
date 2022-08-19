@@ -1,6 +1,6 @@
 # FruitfulAPI
 
-An additional API that simplifies and extends the Spigot / Paper API.
+An additional API that simplifies and extends the Paper API.
 
 **Warning! The API works on Paper, but it isn't work on Spigot!**
 
@@ -87,9 +87,9 @@ new EntityBuilder(EntityType.ZOMBIE, location)
 
 ### Custom Events
 
-1. FarmlandTrampleEvent fires when a player tries to trample a farmland.
-2. FrostWalkerUseEvent fires when the player transforms a block of water into ice when he is wearing boots with a "Frost Walker" enchantment.
-3. ItemFrameCreateEvent fires when a player sets the item frame on a block.
+1. **FarmlandTrampleEvent** fires when a player tries to trample a farmland.
+2. **FrostWalkerUseEvent** fires when the player transforms a block of water into ice when he is wearing boots with a "Frost Walker" enchantment.
+3. **ItemFrameCreateEvent** fires when a player sets the item frame on a block.
 
 You should listen to custom events just as you listen to normal vanilla events.
 
