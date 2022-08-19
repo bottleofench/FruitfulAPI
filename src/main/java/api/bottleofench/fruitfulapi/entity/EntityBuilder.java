@@ -15,6 +15,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,8 +136,30 @@ public class EntityBuilder implements Listener {
         return this;
     }
 
+    public EntityBuilder addPotionEffects(PotionEffect... effects) {
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new EntityBuildException("addPotionEffects() was not successfully executed because entity isn't instance of LivingEntity!");
+        }
+
+        livingEntity.addPotionEffects(List.of(effects));
+        return this;
+    }
+
+    public EntityBuilder editEquipment(Consumer<EntityEquipment> equipmentConsumer) {
+        if (!(entity instanceof LivingEntity livingEntity)) {
+            throw new EntityBuildException("editEquipment() was not successfully executed because entity isn't instance of LivingEntity!");
+        }
+        equipmentConsumer.accept(livingEntity.getEquipment());
+        return this;
+    }
+
     public EntityBuilder setPassenger(Entity passenger) {
         entity.addPassenger(passenger);
+        return this;
+    }
+
+    public EntityBuilder eject() {
+        entity.eject();
         return this;
     }
 
@@ -172,7 +196,7 @@ public class EntityBuilder implements Listener {
     @EventHandler
     private void onTarget(EntityTargetEvent event) {
         if (!event.getEntity().equals(entity)) return;
-        targetHandlers.forEach(targetHandlers -> targetHandlers.accept(event));
+        targetHandlers.forEach(targetHandler -> targetHandler.accept(event));
     }
 
     @EventHandler
