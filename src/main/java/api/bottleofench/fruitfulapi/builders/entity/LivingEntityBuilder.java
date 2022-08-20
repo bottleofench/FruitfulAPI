@@ -100,22 +100,22 @@ public class LivingEntityBuilder extends EntityBuilder implements Cloneable {
         return this;
     }
 
-    public EntityBuilder addDeathListener(Consumer<EntityDeathEvent> deathEventConsumer) {
+    public LivingEntityBuilder addDeathListener(Consumer<EntityDeathEvent> deathEventConsumer) {
         deathHandlers.add(deathEventConsumer);
         return this;
     }
 
-    public EntityBuilder addTargetListener(Consumer<EntityTargetEvent> targetEventConsumer) {
+    public LivingEntityBuilder addTargetListener(Consumer<EntityTargetEvent> targetEventConsumer) {
         targetHandlers.add(targetEventConsumer);
         return this;
     }
 
-    public EntityBuilder addDamageListener(Consumer<EntityDamageEvent> damageEventConsumer) {
+    public LivingEntityBuilder addDamageListener(Consumer<EntityDamageEvent> damageEventConsumer) {
         damageHandlers.add(damageEventConsumer);
         return this;
     }
 
-    public EntityBuilder addAttackListener(Consumer<EntityDamageByEntityEvent> damageByEntityEventConsumer) {
+    public LivingEntityBuilder addAttackListener(Consumer<EntityDamageByEntityEvent> damageByEntityEventConsumer) {
         attackHandlers.add(damageByEntityEventConsumer);
         return this;
     }
