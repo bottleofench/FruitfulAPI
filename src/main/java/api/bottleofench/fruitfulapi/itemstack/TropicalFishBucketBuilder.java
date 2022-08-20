@@ -10,7 +10,7 @@ public class TropicalFishBucketBuilder extends ItemStackBuilder {
         super(Material.TROPICAL_FISH_BUCKET);
     }
 
-    public ItemStackBuilder setPattern(TropicalFish.Pattern pattern) {
+    public TropicalFishBucketBuilder setPattern(TropicalFish.Pattern pattern) {
         item.editMeta(itemMeta -> {
             TropicalFishBucketMeta meta = (TropicalFishBucketMeta) itemMeta;
             meta.setPattern(pattern);
@@ -18,7 +18,7 @@ public class TropicalFishBucketBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setPatternColor(DyeColor dyeColor) {
+    public TropicalFishBucketBuilder setPatternColor(DyeColor dyeColor) {
         item.editMeta(itemMeta -> {
             TropicalFishBucketMeta meta = (TropicalFishBucketMeta) itemMeta;
             meta.setPatternColor(dyeColor);
@@ -26,7 +26,7 @@ public class TropicalFishBucketBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setBodyColor(DyeColor dyeColor) {
+    public TropicalFishBucketBuilder setBodyColor(DyeColor dyeColor) {
         item.editMeta(itemMeta -> {
             TropicalFishBucketMeta meta = (TropicalFishBucketMeta) itemMeta;
             meta.setBodyColor(dyeColor);

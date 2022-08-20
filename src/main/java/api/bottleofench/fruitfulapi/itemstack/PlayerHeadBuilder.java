@@ -15,7 +15,7 @@ public class PlayerHeadBuilder extends ItemStackBuilder {
         super(new ItemStack(Material.PLAYER_HEAD));
     }
 
-    public ItemStackBuilder setTexture(String texture) {
+    public PlayerHeadBuilder setTexture(String texture) {
         item.editMeta(itemMeta -> {
             SkullMeta headMeta = (SkullMeta) itemMeta;
             GameProfile profile = new GameProfile(UUID.randomUUID(), null);

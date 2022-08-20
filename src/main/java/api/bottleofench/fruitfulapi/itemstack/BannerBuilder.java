@@ -12,7 +12,7 @@ public class BannerBuilder extends ItemStackBuilder {
         super(Tag.BANNERS.isTagged(material) ? material : Material.WHITE_BANNER);
     }
 
-    public ItemStackBuilder setPattern(int index, Pattern pattern) {
+    public BannerBuilder setPattern(int index, Pattern pattern) {
         item.editMeta(itemMeta -> {
             BannerMeta meta = (BannerMeta) itemMeta;
             meta.setPattern(index, pattern);
@@ -20,7 +20,7 @@ public class BannerBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setPatterns(Pattern... patterns) {
+    public BannerBuilder setPatterns(Pattern... patterns) {
         item.editMeta(itemMeta -> {
             BannerMeta meta = (BannerMeta) itemMeta;
             meta.setPatterns(List.of(patterns));

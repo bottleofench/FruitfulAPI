@@ -5,34 +5,32 @@ import api.bottleofench.fruitfulapi.exceptions.EntityBuildException;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class EntityBuilder implements Listener {
-    private Entity entity;
-    private List<Consumer<EntityDeathEvent>> deathHandlers = new ArrayList<>();
-    private List<Consumer<EntityTargetEvent>> targetHandlers = new ArrayList<>();
-    private List<Consumer<EntityDamageEvent>> damageHandlers = new ArrayList<>();
-    private List<Consumer<EntityDamageByEntityEvent>> attackHandlers = new ArrayList<>();
+    protected EntityType defaultType = EntityType.ZOMBIE;
+
+    protected Entity entity;
+    protected List<Consumer<EntityDeathEvent>> deathHandlers = new ArrayList<>();
+    protected List<Consumer<EntityTargetEvent>> targetHandlers = new ArrayList<>();
+    protected List<Consumer<EntityDamageEvent>> damageHandlers = new ArrayList<>();
+    protected List<Consumer<EntityDamageByEntityEvent>> attackHandlers = new ArrayList<>();
 
 
     public EntityBuilder(EntityType entityType, Location location) {
         if (entityType == null) {
-            throw new EntityBuildException("EntityType cannot be null!");
+            entityType = defaultType;
         }
 
         if (location == null) {
@@ -85,71 +83,6 @@ public class EntityBuilder implements Listener {
 
     public EntityBuilder setFreezeTicks(int ticks) {
         entity.setFreezeTicks(ticks);
-        return this;
-    }
-
-    public EntityBuilder setAI(boolean flag) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setAI() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        livingEntity.setAI(flag);
-        return this;
-    }
-
-    public EntityBuilder setAttributeBaseValue(Attribute attribute, double value) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setAttributeBaseValue() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        livingEntity.getAttribute(attribute).setBaseValue(value);
-        return this;
-    }
-
-    public EntityBuilder setInvisible(boolean flag) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setInvisible() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        livingEntity.setInvisible(flag);
-        return this;
-    }
-
-    public EntityBuilder setHealth(double health) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setHealth() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        livingEntity.setHealth(health);
-        return this;
-    }
-
-    public EntityBuilder setMaxHealth(double maxHealth) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setMaxHealth() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
-        return this;
-    }
-
-    public EntityBuilder setRemoveWhenFarAway(boolean flag) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setRemoveWhenFarAway() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        livingEntity.setRemoveWhenFarAway(flag);
-        return this;
-    }
-
-    public EntityBuilder addPotionEffects(PotionEffect... effects) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("addPotionEffects() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-
-        livingEntity.addPotionEffects(List.of(effects));
-        return this;
-    }
-
-    public EntityBuilder editEquipment(Consumer<EntityEquipment> equipmentConsumer) {
-        if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("editEquipment() was not successfully executed because entity isn't instance of LivingEntity!");
-        }
-        equipmentConsumer.accept(livingEntity.getEquipment());
         return this;
     }
 

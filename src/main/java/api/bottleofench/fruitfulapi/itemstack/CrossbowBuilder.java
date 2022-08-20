@@ -14,7 +14,7 @@ public class CrossbowBuilder extends ItemStackBuilder {
         super(Material.CROSSBOW);
     }
 
-    public ItemStackBuilder setChargedProjectiles(ItemStack... projectile) {
+    public CrossbowBuilder setChargedProjectiles(ItemStack... projectile) {
         item.editMeta(itemMeta -> {
             CrossbowMeta meta = (CrossbowMeta) itemMeta;
             meta.setChargedProjectiles(List.of(projectile));

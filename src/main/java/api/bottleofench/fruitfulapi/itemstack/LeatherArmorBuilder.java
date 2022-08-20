@@ -12,7 +12,7 @@ public class LeatherArmorBuilder extends ItemStackBuilder {
                 || material == Material.LEATHER_BOOTS ? material : Material.LEATHER_CHESTPLATE);
     }
 
-    public ItemStackBuilder setColor(Color color) {
+    public LeatherArmorBuilder setColor(Color color) {
         item.editMeta(itemMeta -> {
             LeatherArmorMeta meta = (LeatherArmorMeta) itemMeta;
             meta.setColor(color);
@@ -20,7 +20,7 @@ public class LeatherArmorBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder clearColor() {
+    public LeatherArmorBuilder clearColor() {
         LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
         meta.setColor(null);
         item.setItemMeta(meta);

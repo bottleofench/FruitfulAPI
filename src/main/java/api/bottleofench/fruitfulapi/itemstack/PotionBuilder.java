@@ -19,7 +19,7 @@ public class PotionBuilder extends ItemStackBuilder {
                 material.equals(Material.SPLASH_POTION) ? material : Material.POTION);
     }
 
-    public ItemStackBuilder setPotionColor(Color color) {
+    public PotionBuilder setPotionColor(Color color) {
         item.editMeta(itemMeta -> {
             PotionMeta meta = (PotionMeta) itemMeta;
             meta.setColor(color);
@@ -27,7 +27,7 @@ public class PotionBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setBasePotionData(PotionData data) {
+    public PotionBuilder setBasePotionData(PotionData data) {
         item.editMeta(itemMeta -> {
             PotionMeta meta = (PotionMeta) itemMeta;
             meta.setBasePotionData(data);
@@ -35,7 +35,7 @@ public class PotionBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setCustomEffects(boolean override, PotionEffect... effects) {
+    public PotionBuilder setCustomEffects(boolean override, PotionEffect... effects) {
         item.editMeta(itemMeta -> {
             PotionMeta meta = (PotionMeta) itemMeta;
             meta.clearCustomEffects();
@@ -44,7 +44,7 @@ public class PotionBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder addCustomEffects(boolean override, PotionEffect... effects) {
+    public PotionBuilder addCustomEffects(boolean override, PotionEffect... effects) {
         item.editMeta(itemMeta -> {
             PotionMeta meta = (PotionMeta) itemMeta;
             List.of(effects).forEach(potionEffect -> meta.addCustomEffect(potionEffect, override));

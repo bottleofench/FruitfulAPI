@@ -13,7 +13,7 @@ public class SuspiciousStewBuilder extends ItemStackBuilder {
         super(Material.SUSPICIOUS_STEW);
     }
 
-    public ItemStackBuilder addCustomEffects(boolean override, PotionEffect... effects) {
+    public SuspiciousStewBuilder addCustomEffects(boolean override, PotionEffect... effects) {
         item.editMeta(itemMeta -> {
             SuspiciousStewMeta meta = (SuspiciousStewMeta) itemMeta;
             List.of(effects).forEach(effect -> meta.addCustomEffect(effect, override));

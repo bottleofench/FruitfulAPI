@@ -9,7 +9,7 @@ public class AxolotlBucketBuilder extends ItemStackBuilder {
         super(Material.AXOLOTL_BUCKET);
     }
 
-    public ItemStackBuilder setPattern(Axolotl.Variant pattern) {
+    public AxolotlBucketBuilder setPattern(Axolotl.Variant pattern) {
         item.editMeta(itemMeta -> {
             AxolotlBucketMeta meta = (AxolotlBucketMeta) itemMeta;
             meta.setVariant(pattern);

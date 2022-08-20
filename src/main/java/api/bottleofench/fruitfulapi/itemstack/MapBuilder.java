@@ -15,7 +15,7 @@ public class MapBuilder extends ItemStackBuilder {
         super(Material.FILLED_MAP);
     }
 
-    public ItemStackBuilder setScaling(boolean flag) {
+    public MapBuilder setScaling(boolean flag) {
         item.editMeta(itemMeta -> {
             MapMeta meta = (MapMeta) itemMeta;
             meta.setScaling(flag);
@@ -23,7 +23,7 @@ public class MapBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setColor(Color color) {
+    public MapBuilder setColor(Color color) {
         item.editMeta(itemMeta -> {
             MapMeta meta = (MapMeta) itemMeta;
             meta.setColor(color);
@@ -31,7 +31,7 @@ public class MapBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setMapView(MapView mapView) {
+    public MapBuilder setMapView(MapView mapView) {
         item.editMeta(itemMeta -> {
             MapMeta meta = (MapMeta) itemMeta;
             meta.setMapView(mapView);
@@ -39,7 +39,7 @@ public class MapBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setLocationName(String name) {
+    public MapBuilder setLocationName(String name) {
         item.editMeta(itemMeta -> {
             MapMeta meta = (MapMeta) itemMeta;
             meta.setLocationName(name);
