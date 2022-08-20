@@ -1,7 +1,7 @@
 package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
-import api.bottleofench.fruitfulapi.exceptions.ItemStackBuildException;
+import api.bottleofench.fruitfulapi.exceptions.ItemStackBuilderException;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +18,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class ItemStackBuilder implements Listener {
+public class ItemStackBuilder implements Listener, Cloneable {
     protected ItemStack item;
     protected List<Consumer<PlayerInteractEvent>> interactHandlers = new ArrayList<>();
 
@@ -59,7 +59,7 @@ public class ItemStackBuilder implements Listener {
 
     public ItemStackBuilder setDamage(int damage) {
         if (!(item.getItemMeta() instanceof Damageable)) {
-            throw new ItemStackBuildException("ItemMeta of ItemStack isn't instance of Damageable!");
+            throw new ItemStackBuilderException("ItemMeta of ItemStack isn't instance of Damageable!");
         }
         item.editMeta(itemMeta -> ((Damageable) item).setDamage(damage));
         return this;
@@ -138,7 +138,7 @@ public class ItemStackBuilder implements Listener {
 
     public ItemStackBuilder setMeta(ItemMeta meta) {
         if (!item.setItemMeta(meta)) {
-            throw new ItemStackBuildException("ItemMeta cannot be set correctly!");
+            throw new ItemStackBuilderException("ItemMeta cannot be set correctly!");
         }
         return this;
     }
@@ -166,5 +166,17 @@ public class ItemStackBuilder implements Listener {
 
     public ItemStack build() {
         return item;
+    }
+
+    @Override
+    public ItemStackBuilder clone() {
+        try {
+            ItemStackBuilder clone = (ItemStackBuilder) super.clone();
+            clone.item = this.item;
+            clone.interactHandlers = this.interactHandlers;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new ItemStackBuilderException("Clone operation is not correctly executed!");
+        }
     }
 }

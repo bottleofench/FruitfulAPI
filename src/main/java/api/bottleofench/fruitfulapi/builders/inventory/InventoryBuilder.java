@@ -1,10 +1,12 @@
 package api.bottleofench.fruitfulapi.builders.inventory;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
+import api.bottleofench.fruitfulapi.exceptions.InventoryBuilderException;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -15,12 +17,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.function.Consumer;
-import org.bukkit.event.Listener;
 
-public class InventoryBuilder implements Listener {
+public class InventoryBuilder implements Listener, Cloneable {
     private final int defaultInventorySize = 27;
     private Inventory inventory;
-    private final Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
+    private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
     private List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
     private List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
     private List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
@@ -136,5 +137,20 @@ public class InventoryBuilder implements Listener {
     private void handleClose(InventoryCloseEvent event) {
         if (!event.getInventory().equals(inventory)) return;
         closeHandlers.forEach(c -> c.accept(event));
+    }
+
+    @Override
+    public InventoryBuilder clone() {
+        try {
+            InventoryBuilder clone = (InventoryBuilder) super.clone();
+            clone.clickHandlers = this.clickHandlers;
+            clone.inventory = this.inventory;
+            clone.itemHandlers = this.itemHandlers;
+            clone.openHandlers = this.openHandlers;
+            clone.closeHandlers = this.closeHandlers;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new InventoryBuilderException("Clone operation is not correctly executed!");
+        }
     }
 }

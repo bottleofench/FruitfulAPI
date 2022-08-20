@@ -1,7 +1,7 @@
 package api.bottleofench.fruitfulapi.builders.entity;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
-import api.bottleofench.fruitfulapi.exceptions.EntityBuildException;
+import api.bottleofench.fruitfulapi.exceptions.EntityBuilderException;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class EntityBuilder implements Listener {
+public class EntityBuilder implements Listener, Cloneable {
     protected EntityType defaultType = EntityType.ZOMBIE;
 
     protected Entity entity;
@@ -34,10 +34,15 @@ public class EntityBuilder implements Listener {
         }
 
         if (location == null) {
-            throw new EntityBuildException("Location cannot be null!");
+            throw new EntityBuilderException("Location cannot be null!");
         }
 
         entity = location.getWorld().spawnEntity(location, entityType);
+        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
+    }
+
+    public EntityBuilder(Entity entity) {
+        this.entity = entity;
         Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
@@ -144,4 +149,18 @@ public class EntityBuilder implements Listener {
         attackHandlers.forEach(attackHandler -> attackHandler.accept(event));
     }
 
+    @Override
+    public EntityBuilder clone() {
+        try {
+            EntityBuilder clone = (EntityBuilder) super.clone();
+            clone.entity = this.entity;
+            clone.attackHandlers = this.attackHandlers;
+            clone.damageHandlers = this.damageHandlers;
+            clone.deathHandlers = this.deathHandlers;
+            clone.targetHandlers = this.targetHandlers;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new EntityBuilderException("Clone operation is not correctly executed!");
+        }
+    }
 }

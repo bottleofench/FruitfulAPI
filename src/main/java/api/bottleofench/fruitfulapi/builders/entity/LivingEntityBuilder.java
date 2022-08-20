@@ -1,6 +1,6 @@
 package api.bottleofench.fruitfulapi.builders.entity;
 
-import api.bottleofench.fruitfulapi.exceptions.EntityBuildException;
+import api.bottleofench.fruitfulapi.exceptions.EntityBuilderException;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
@@ -18,7 +18,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setAI(boolean flag) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setAI() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setAI() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.setAI(flag);
         return this;
@@ -26,7 +26,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setAttributeBaseValue(Attribute attribute, double value) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setAttributeBaseValue() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setAttributeBaseValue() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.getAttribute(attribute).setBaseValue(value);
         return this;
@@ -34,7 +34,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setInvisible(boolean flag) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setInvisible() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setInvisible() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.setInvisible(flag);
         return this;
@@ -42,7 +42,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setHealth(double health) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setHealth() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setHealth() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.setHealth(health);
         return this;
@@ -50,7 +50,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setMaxHealth(double maxHealth) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setMaxHealth() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setMaxHealth() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHealth);
         return this;
@@ -58,7 +58,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setRemoveWhenFarAway(boolean flag) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setRemoveWhenFarAway() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setRemoveWhenFarAway() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.setRemoveWhenFarAway(flag);
         return this;
@@ -66,7 +66,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder setCanPickupItems(boolean flag) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("setRemoveWhenFarAway() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("setRemoveWhenFarAway() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         livingEntity.setCanPickupItems(flag);
         return this;
@@ -74,7 +74,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder addPotionEffects(PotionEffect... effects) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("addPotionEffects() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("addPotionEffects() was not successfully executed because entity isn't instance of LivingEntity!");
         }
 
         livingEntity.addPotionEffects(List.of(effects));
@@ -83,7 +83,7 @@ public class LivingEntityBuilder extends EntityBuilder {
 
     public LivingEntityBuilder editEquipment(Consumer<EntityEquipment> equipmentConsumer) {
         if (!(entity instanceof LivingEntity livingEntity)) {
-            throw new EntityBuildException("editEquipment() was not successfully executed because entity isn't instance of LivingEntity!");
+            throw new EntityBuilderException("editEquipment() was not successfully executed because entity isn't instance of LivingEntity!");
         }
         equipmentConsumer.accept(livingEntity.getEquipment());
         return this;

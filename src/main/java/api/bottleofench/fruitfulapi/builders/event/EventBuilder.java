@@ -1,5 +1,6 @@
 package api.bottleofench.fruitfulapi.builders.event;
 
+import api.bottleofench.fruitfulapi.exceptions.EventBuilderException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @ApiStatus.Experimental
-public class EventBuilder implements Listener {
+public class EventBuilder implements Listener, Cloneable {
     private List<Consumer<PlayerJoinEvent>> joinHandlers;
     private List<Consumer<PlayerQuitEvent>> quitHandlers;
     private List<Consumer<PlayerInteractEvent>> interactHandlers;
@@ -83,7 +84,23 @@ public class EventBuilder implements Listener {
     }
 
     @EventHandler
-    private void onDamage(EntityDamageEvent event) {
+    private void onEntityDamage(EntityDamageEvent event) {
         entityDamageHandlers.forEach(entityDamage -> entityDamage.accept(event));
+    }
+
+    @Override
+    public EventBuilder clone() {
+        try {
+            EventBuilder clone = (EventBuilder) super.clone();
+            clone.joinHandlers = this.joinHandlers;
+            clone.quitHandlers = this.quitHandlers;
+            clone.entityDamageHandlers = this.entityDamageHandlers;
+            clone.blockBreakHandlers = this.blockBreakHandlers;
+            clone.blockPlaceHandlers = this.blockPlaceHandlers;
+            clone.interactHandlers = this.interactHandlers;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new EventBuilderException("Clone operation is not correctly executed!");
+        }
     }
 }
