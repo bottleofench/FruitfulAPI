@@ -108,7 +108,7 @@ You should listen to custom events just as you listen to normal vanilla events.
 <dependency>
     <groupId>com.github.bottleofench</groupId>
     <artifactId>FruitfulAPI</artifactId>
-    <version>-SNAPSHOT</version>
+    <version>0.1</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -123,7 +123,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.bottleofench:FruitfulAPI:-SNAPSHOT'
+    implementation 'com.github.bottleofench:FruitfulAPI:0.1'
 }
 ```
 
