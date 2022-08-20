@@ -10,7 +10,7 @@ public class BookBuilder extends ItemStackBuilder {
         super(new ItemStack(Material.WRITTEN_BOOK));
     }
 
-    public ItemStackBuilder addPages(Component... pages) {
+    public BookBuilder addPages(Component... pages) {
         item.editMeta(itemMeta -> {
             BookMeta meta = (BookMeta) itemMeta;
             meta.addPages(pages);
@@ -18,7 +18,7 @@ public class BookBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setPage(int id, Component page) {
+    public BookBuilder setPage(int id, Component page) {
         item.editMeta(itemMeta -> {
             BookMeta meta = (BookMeta) itemMeta;
             meta.page(id, page);
@@ -26,7 +26,7 @@ public class BookBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setAuthor(Component author) {  // TODO is it working?
+    public BookBuilder setAuthor(Component author) {  // TODO is it working?
         item.editMeta(itemMeta -> {
             BookMeta meta = (BookMeta) itemMeta;
             meta.author(author);
@@ -34,7 +34,7 @@ public class BookBuilder extends ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setGeneration(BookMeta.Generation generation) {
+    public BookBuilder setGeneration(BookMeta.Generation generation) {
         item.editMeta(itemMeta -> {
             BookMeta meta = (BookMeta) itemMeta;
             meta.setGeneration(generation);
