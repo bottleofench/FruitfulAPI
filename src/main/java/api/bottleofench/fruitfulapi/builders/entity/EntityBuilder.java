@@ -22,10 +22,6 @@ public class EntityBuilder implements Listener, Cloneable {
     protected EntityType defaultType = EntityType.ZOMBIE;
 
     protected Entity entity;
-    protected List<Consumer<EntityDeathEvent>> deathHandlers = new ArrayList<>();
-    protected List<Consumer<EntityTargetEvent>> targetHandlers = new ArrayList<>();
-    protected List<Consumer<EntityDamageEvent>> damageHandlers = new ArrayList<>();
-    protected List<Consumer<EntityDamageByEntityEvent>> attackHandlers = new ArrayList<>();
 
 
     public EntityBuilder(EntityType entityType, Location location) {
@@ -38,11 +34,6 @@ public class EntityBuilder implements Listener, Cloneable {
         }
 
         entity = location.getWorld().spawnEntity(location, entityType);
-        Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
-    }
-
-    public EntityBuilder(Entity entity) {
-        this.entity = entity;
         Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
@@ -105,59 +96,11 @@ public class EntityBuilder implements Listener, Cloneable {
         return entity;
     }
 
-    public EntityBuilder addDeathListener(Consumer<EntityDeathEvent> deathEventConsumer) {
-        deathHandlers.add(deathEventConsumer);
-        return this;
-    }
-
-    public EntityBuilder addTargetListener(Consumer<EntityTargetEvent> targetEventConsumer) {
-        targetHandlers.add(targetEventConsumer);
-        return this;
-    }
-
-    public EntityBuilder addDamageListener(Consumer<EntityDamageEvent> damageEventConsumer) {
-        damageHandlers.add(damageEventConsumer);
-        return this;
-    }
-
-    public EntityBuilder addAttackListener(Consumer<EntityDamageByEntityEvent> damageByEntityEventConsumer) {
-        attackHandlers.add(damageByEntityEventConsumer);
-        return this;
-    }
-
-    @EventHandler
-    private void onDeath(EntityDeathEvent event) {
-        if (!event.getEntity().equals(entity)) return;
-        deathHandlers.forEach(deathHandler -> deathHandler.accept(event));
-    }
-
-    @EventHandler
-    private void onTarget(EntityTargetEvent event) {
-        if (!event.getEntity().equals(entity)) return;
-        targetHandlers.forEach(targetHandler -> targetHandler.accept(event));
-    }
-
-    @EventHandler
-    private void onDamage(EntityDamageEvent event) {
-        if (!event.getEntity().equals(entity)) return;
-        damageHandlers.forEach(damageHandler -> damageHandler.accept(event));
-    }
-
-    @EventHandler
-    private void onAttack(EntityDamageByEntityEvent event) {
-        if (!event.getDamager().equals(entity)) return;
-        attackHandlers.forEach(attackHandler -> attackHandler.accept(event));
-    }
-
     @Override
     public EntityBuilder clone() {
         try {
             EntityBuilder clone = (EntityBuilder) super.clone();
             clone.entity = this.entity;
-            clone.attackHandlers = this.attackHandlers;
-            clone.damageHandlers = this.damageHandlers;
-            clone.deathHandlers = this.deathHandlers;
-            clone.targetHandlers = this.targetHandlers;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new EntityBuilderException("Clone operation is not correctly executed!");

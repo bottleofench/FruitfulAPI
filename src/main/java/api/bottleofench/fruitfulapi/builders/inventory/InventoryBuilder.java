@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class InventoryBuilder implements Listener, Cloneable {
-    private final int defaultInventorySize = 27;
     private Inventory inventory;
     private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
     private List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
@@ -27,7 +26,7 @@ public class InventoryBuilder implements Listener, Cloneable {
     private List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
 
     public InventoryBuilder() {
-        inventory = Bukkit.createInventory(null, defaultInventorySize);
+        inventory = Bukkit.createInventory(null, 27);
         Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
@@ -37,7 +36,7 @@ public class InventoryBuilder implements Listener, Cloneable {
     }
 
     public InventoryBuilder(InventoryHolder holder) {
-        inventory = Bukkit.createInventory(holder, defaultInventorySize);
+        inventory = Bukkit.createInventory(holder, 27);
         Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
@@ -62,7 +61,7 @@ public class InventoryBuilder implements Listener, Cloneable {
     }
 
     public InventoryBuilder(Component title) {
-        inventory = Bukkit.createInventory(null, defaultInventorySize, title);
+        inventory = Bukkit.createInventory(null, 27, title);
         Bukkit.getPluginManager().registerEvents(this, FruitfulAPI.getInstance());
     }
 
