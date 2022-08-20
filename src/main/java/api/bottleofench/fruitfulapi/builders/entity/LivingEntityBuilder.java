@@ -1,4 +1,4 @@
-package api.bottleofench.fruitfulapi.entity;
+package api.bottleofench.fruitfulapi.builders.entity;
 
 import api.bottleofench.fruitfulapi.exceptions.EntityBuildException;
 import org.bukkit.Location;

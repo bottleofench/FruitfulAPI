@@ -1,4 +1,4 @@
-package api.bottleofench.fruitfulapi.itemstack;
+package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import org.bukkit.Color;
 import org.bukkit.Material;

@@ -1,10 +1,7 @@
-package api.bottleofench.fruitfulapi.itemstack;
+package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.block.banner.Pattern;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.CrossbowMeta;
 
 import java.util.List;

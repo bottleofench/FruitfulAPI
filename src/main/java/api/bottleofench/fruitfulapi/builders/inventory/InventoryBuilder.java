@@ -1,4 +1,4 @@
-package api.bottleofench.fruitfulapi.inventory;
+package api.bottleofench.fruitfulapi.builders.inventory;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
 import net.kyori.adventure.text.Component;

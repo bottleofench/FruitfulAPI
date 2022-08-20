@@ -1,8 +1,6 @@
-package api.bottleofench.fruitfulapi.itemstack;
+package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CrossbowMeta;
 import org.bukkit.inventory.meta.SuspiciousStewMeta;
 import org.bukkit.potion.PotionEffect;
 

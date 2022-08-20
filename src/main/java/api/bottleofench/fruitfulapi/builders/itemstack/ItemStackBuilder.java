@@ -1,4 +1,4 @@
-package api.bottleofench.fruitfulapi.itemstack;
+package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.ItemStackBuildException;

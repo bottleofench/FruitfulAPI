@@ -1,4 +1,4 @@
-package api.bottleofench.fruitfulapi.itemstack;
+package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;

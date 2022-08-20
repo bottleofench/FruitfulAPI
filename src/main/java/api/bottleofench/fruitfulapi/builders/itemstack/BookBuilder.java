@@ -1,4 +1,4 @@
-package api.bottleofench.fruitfulapi.itemstack;
+package api.bottleofench.fruitfulapi.builders.itemstack;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
