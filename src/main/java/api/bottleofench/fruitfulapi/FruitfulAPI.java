@@ -1,18 +1,16 @@
 package api.bottleofench.fruitfulapi;
 
-import api.bottleofench.fruitfulapi.events.FarmlandTrampleEvent;
-import api.bottleofench.fruitfulapi.events.FrostWalkerUseEvent;
-import api.bottleofench.fruitfulapi.events.ItemFrameCreateEvent;
+import api.bottleofench.fruitfulapi.events.*;
+import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.EntityBlockFormEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +18,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class FruitfulAPI extends JavaPlugin implements Listener {
 
     private static JavaPlugin instance;
+
+    public static JavaPlugin getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -39,18 +41,52 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    private void onItemFrameItemPlace(PlayerInteractEvent event) {
+    private void onItemFrameItemPlace(HangingPlaceEvent event) {
+        if (!(event.getEntity() instanceof ItemFrame frame)) return;
+        ItemFrameCreateEvent e = new ItemFrameCreateEvent(event.getPlayer(), frame);
+        getServer().getPluginManager().callEvent(e);
+        if (e.isCancelled()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onPaintingItemPlace(HangingPlaceEvent event) {
+        if (!(event.getEntity() instanceof Painting painting)) return;
+        PaintingCreateEvent e = new PaintingCreateEvent(event.getPlayer(), painting);
+        getServer().getPluginManager().callEvent(e);
+        if (e.isCancelled()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onArmorStandItemPlace(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getClickedBlock() == null) return;
         if (event.getItem() == null) return;
-        if (!(event.getItem().getType().equals(Material.ITEM_FRAME) ||
-                event.getItem().getType().equals(Material.GLOW_ITEM_FRAME))) return;
+        if (!(event.getItem().getType().equals(Material.ARMOR_STAND))) return;
         Location loc = event.getInteractionPoint();
         Bukkit.getScheduler().runTaskLater(this, () -> {
             for (Entity entity : loc.getNearbyEntities(0.5, 0.5, 0.5)) {
-                if (!(entity instanceof ItemFrame frame)) continue;
-                ItemFrameCreateEvent e = new ItemFrameCreateEvent(event.getPlayer(), frame);
+                if (!(entity instanceof ArmorStand armorStand)) continue;
+                ArmorStandCreateEvent e = new ArmorStandCreateEvent(event.getPlayer(), armorStand);
+                getServer().getPluginManager().callEvent(e);
+                if (e.isCancelled()) event.setCancelled(true);
+                return;
+            }
+        }, 2);
+    }
+
+    @EventHandler
+    private void onPlayerUseSpawnEgg(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (event.getClickedBlock() == null) return;
+        if (event.getItem() == null) return;
+        if (!MaterialTags.SPAWN_EGGS.isTagged(event.getItem())) return;
+        Location loc = event.getInteractionPoint();
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            for (Entity entity : loc.getNearbyEntities(0.25, 0.25, 0.25)) {
+                if (!(entity instanceof LivingEntity livingEntity)) continue;
+                PlayerUseSpawnEggEvent e = new PlayerUseSpawnEggEvent(event.getPlayer(), event.getItem(), livingEntity);
                 getServer().getPluginManager().callEvent(e);
                 if (e.isCancelled()) event.setCancelled(true);
                 return;
@@ -65,9 +101,5 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         FrostWalkerUseEvent e = new FrostWalkerUseEvent(player, event.getNewState().getBlock());
         getServer().getPluginManager().callEvent(e);
         if (e.isCancelled()) event.setCancelled(true);
-    }
-
-    public static JavaPlugin getInstance() {
-        return instance;
     }
 }
