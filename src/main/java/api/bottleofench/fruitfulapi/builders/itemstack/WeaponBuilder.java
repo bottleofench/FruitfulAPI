@@ -18,13 +18,14 @@ public class WeaponBuilder extends ItemStackBuilder implements Listener {
                 ? material : Material.STONE_SWORD);
     }
 
-    public WeaponBuilder addAttackHandler(Consumer<EntityDamageByEntityEvent>... consumers) {
+    @SafeVarargs
+    public final WeaponBuilder addAttackHandler(Consumer<EntityDamageByEntityEvent>... consumers) {
         this.attackHandlers.addAll(List.of(consumers));
         return this;
     }
 
     @EventHandler
-    private void onAttack(EntityDamageByEntityEvent event) {
+    private void handleAttack(EntityDamageByEntityEvent event) {
         this.attackHandlers.forEach(attackHandler -> attackHandler.accept(event));
     }
 }

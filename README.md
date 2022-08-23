@@ -9,7 +9,11 @@ An additional API that simplifies and extends the Paper API.
 ### ItemStackBuilder
 ItemStackBuilder is a class that makes it easy to create ItemStacks.
 
-The class supports most operations with ItemStacks, including listening to events involving a created ItemStack.
+The class supports many operations with ItemStacks, including listening to events involving a created ItemStack.
+
+Many builders are inherited from the class, extending the functionality of this class.
+
+You can see all available builders [here](https://github.com/bottleofench/FruitfulAPI/tree/master/src/main/java/api/bottleofench/fruitfulapi/builders).
 
 #### Examples
 
@@ -21,16 +25,18 @@ ItemStack item = new ItemStackBuilder(Material.STONE_SWORD, 100)
 ```
 
 ```java
-ItemStack item = new ItemStackBuilder(Material.WRITTEN_BOOK)
-    .addPages(Component.text("Page 1"), Component.text("Page 2")/*, ... */)
-    .build();
+ItemStack item = new BookBuilder()
+        .addPages(Component.text("Page 1"),
+        Component.text("Page 2")/*, ... */)
+        .build();
 ```
 
 ```java
-ItemStack item = new ItemStackBuilder(Material.STONE_SWORD).addInteractHandler(onInteract -> {
-    onInteract.setCancelled(true);
-    onInteract.getPlayer().sendMessage(Component.text("Hello!"));
-}).build();
+ItemStack item = new WeaponBuilder(Material.NETHERITE_SWORD).addAttackHandler(event -> {
+            event.setDamage(1000);
+        })
+        .setDisplayName(Component.text("God Sword!").color(NamedTextColor.GOLD))
+        .build();
 ```
 
 ### InventoryBuilder
@@ -61,27 +67,43 @@ EntityBuilder is a class that makes it easy to spawn entities.
 
 The class supports most operations with entities, including listening to events involving a created entity.
 
+The LivingEntityBuilder, a class that allows you to work with living creatures, is inherited from the class.
+
 #### Examples
 
 ```java
-new EntityBuilder(EntityType.ZOMBIE, location)
-    .setCustomName(Component.text("Super Zombie"))
-    .setHealth(100).setMaxHealth(100)
-    .setVisualFire(true)
-    .addDeathListener(onDeath -> {
-        onDeath.setCancelled(true);
-        onDeath.getEntity().getWorld().playSound(
+new LivingEntityBuilder(EntityType.ZOMBIE, location)
+        .setHealth(100).setMaxHealth(100)
+        .addDeathListener(onDeath -> {
+            onDeath.setCancelled(true);
+            onDeath.getEntity().getWorld().playSound(
                 onDeath.getEntity().getEyeLocation(), Sound.ITEM_TOTEM_USE, 1, 1
-        );
-    });
+            );
+        })
+        .setCustomName(Component.text("Super Zombie"))
+        .setVisualFire(true);
 ```
 
 ```java
-new EntityBuilder(EntityType.ZOMBIE, location)
-    .setCustomName(Component.text("Fire Zombie"))
-    .setVisualFire(true)
-    .addAttackListener(onDeath -> {
-        onDeath.getEntity().setFireTicks(100);
+new LivingEntityBuilder(EntityType.ZOMBIE, location)
+        .addAttackListener(onDeath -> {
+            onDeath.getEntity().setFireTicks(100);
+        })
+        .setCustomName(Component.text("Fire Zombie"))
+        .setVisualFire(true);
+```
+
+### EventBuilder (Experimental)
+EventBuilder is an experimental class that makes it easy to listen to the most popular events.
+
+At the moment, it only allows you to listen to a few events, as it is in experimental status.
+
+#### Examples
+```java
+new EventBuilder(this).join(playerJoinEvent -> {
+        playerJoinEvent.getPlayer().sendMessage(Component.text("Hello!"));
+    }).blockBreak(blockBreakEvent -> {
+        blockBreakEvent.getPlayer().sendMessage(Component.text("You're broken the block!"));
     });
 ```
 
@@ -90,6 +112,9 @@ new EntityBuilder(EntityType.ZOMBIE, location)
 1. **FarmlandTrampleEvent** fires when a player tries to trample a farmland.
 2. **FrostWalkerUseEvent** fires when the player transforms a block of water into ice when he is wearing boots with a "Frost Walker" enchantment.
 3. **ItemFrameCreateEvent** fires when a player sets the item frame on a block.
+4. **ArmorStandCreateEvent** fires when the player places an armorstand on a block.
+5. **PaintingCreateEvent** fires when the player places a painting on the wall.
+6. **PlayerUseSpawnEggEvent** fires when the player uses a spawn egg.
 
 You should listen to custom events just as you listen to normal vanilla events.
 
@@ -108,7 +133,7 @@ You should listen to custom events just as you listen to normal vanilla events.
 <dependency>
     <groupId>com.github.bottleofench</groupId>
     <artifactId>FruitfulAPI</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -123,7 +148,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.bottleofench:FruitfulAPI:0.1'
+    implementation 'com.github.bottleofench:FruitfulAPI:0.2'
 }
 ```
 
@@ -137,3 +162,11 @@ api-version: 1.19
 depend:
   - FruitfulAPI
 ```
+
+## TODO
+- Check EventBuilder for usefulness;
+- Check setAuthor() in BookBuilder.
+
+## Ideas
+- Add the ability to create "pages" for inventories;
+- Improve EventBuilder class.

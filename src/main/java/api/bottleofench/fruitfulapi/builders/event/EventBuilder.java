@@ -28,7 +28,8 @@ public class EventBuilder implements Listener, Cloneable {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public EventBuilder join(Consumer<PlayerJoinEvent>... consumers) {
+    @SafeVarargs
+    public final EventBuilder join(Consumer<PlayerJoinEvent>... consumers) {
         this.joinHandlers = List.of(consumers);
         return this;
     }
@@ -38,7 +39,8 @@ public class EventBuilder implements Listener, Cloneable {
         joinHandlers.forEach(join -> join.accept(event));
     }
 
-    public EventBuilder quit(Consumer<PlayerQuitEvent>... consumers) {
+    @SafeVarargs
+    public final EventBuilder quit(Consumer<PlayerQuitEvent>... consumers) {
         this.quitHandlers = List.of(consumers);
         return this;
     }
@@ -48,7 +50,8 @@ public class EventBuilder implements Listener, Cloneable {
         quitHandlers.forEach(quit -> quit.accept(event));
     }
 
-    public EventBuilder interact(Consumer<PlayerInteractEvent>... consumers) {
+    @SafeVarargs
+    public final EventBuilder interact(Consumer<PlayerInteractEvent>... consumers) {
         this.interactHandlers = List.of(consumers);
         return this;
     }
@@ -58,7 +61,8 @@ public class EventBuilder implements Listener, Cloneable {
         interactHandlers.forEach(interact -> interact.accept(event));
     }
 
-    public EventBuilder blockBreak(Consumer<BlockBreakEvent>... consumers) {
+    @SafeVarargs
+    public final EventBuilder blockBreak(Consumer<BlockBreakEvent>... consumers) {
         this.blockBreakHandlers = List.of(consumers);
         return this;
     }
@@ -68,7 +72,8 @@ public class EventBuilder implements Listener, Cloneable {
         blockBreakHandlers.forEach(blockBreak -> blockBreak.accept(event));
     }
 
-    public EventBuilder blockPlace(Consumer<BlockPlaceEvent>... consumers) {
+    @SafeVarargs
+    public final EventBuilder blockPlace(Consumer<BlockPlaceEvent>... consumers) {
         this.blockPlaceHandlers = List.of(consumers);
         return this;
     }
@@ -78,7 +83,8 @@ public class EventBuilder implements Listener, Cloneable {
         blockPlaceHandlers.forEach(blockPlace -> blockPlace.accept(event));
     }
 
-    public EventBuilder entityDamage(Consumer<EntityDamageEvent>... consumers) {
+    @SafeVarargs
+    public final EventBuilder entityDamage(Consumer<EntityDamageEvent>... consumers) {
         this.entityDamageHandlers = List.of(consumers);
         return this;
     }

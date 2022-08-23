@@ -19,7 +19,8 @@ public class BowBuilder extends ItemStackBuilder implements Listener {
         super(Material.BOW);
     }
 
-    public BowBuilder addBowShootHandler(Consumer<EntityShootBowEvent>... consumers) {
+    @SafeVarargs
+    public final BowBuilder addBowShootHandler(Consumer<EntityShootBowEvent>... consumers) {
         this.bowShootHandlers.addAll(List.of(consumers));
         return this;
     }

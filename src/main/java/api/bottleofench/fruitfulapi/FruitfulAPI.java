@@ -1,10 +1,18 @@
 package api.bottleofench.fruitfulapi;
 
+import api.bottleofench.fruitfulapi.builders.entity.LivingEntityBuilder;
+import api.bottleofench.fruitfulapi.builders.event.EventBuilder;
+import api.bottleofench.fruitfulapi.builders.itemstack.BookBuilder;
+import api.bottleofench.fruitfulapi.builders.itemstack.WeaponBuilder;
 import api.bottleofench.fruitfulapi.events.*;
 import com.destroystokyo.paper.MaterialTags;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +21,7 @@ import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class FruitfulAPI extends JavaPlugin implements Listener {
@@ -26,6 +35,14 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+
+        Location location = null;
+
+        new EventBuilder(this).join(playerJoinEvent -> {
+            playerJoinEvent.getPlayer().sendMessage(Component.text("Hello!"));
+        }).blockBreak(blockBreakEvent -> {
+            blockBreakEvent.getPlayer().sendMessage(Component.text("You're broken the block!"));
+        });
 
         getServer().getPluginManager().registerEvents(this, this);
     }
