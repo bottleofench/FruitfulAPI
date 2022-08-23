@@ -21,7 +21,7 @@ jobs:
         with:
           step: save
       - name: Prepare to upload artifact
-        run: mkdir staging && cp target/FruitfulAPI-0.1.jar staging && mv staging/FruitfulAPI-0.1.jar staging/FruitfulAPI.jar
+        run: mkdir staging && cp target/FruitfulAPI-0.2.jar staging && mv staging/FruitfulAPI-0.2.jar staging/FruitfulAPI.jar
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
