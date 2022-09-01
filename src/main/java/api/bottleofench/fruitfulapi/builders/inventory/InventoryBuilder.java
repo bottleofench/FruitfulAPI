@@ -3,6 +3,7 @@ package api.bottleofench.fruitfulapi.builders.inventory;
 import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.InventoryBuilderException;
 import api.bottleofench.fruitfulapi.util.event_consumer.SmallUtil;
+import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryClickEventHandler;
 import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryCloseEventHandler;
 import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryOpenEventHandler;
 import net.kyori.adventure.text.Component;
@@ -26,7 +27,7 @@ public class InventoryBuilder implements Listener, Cloneable {
     private Inventory inventory;
     private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
     private List<InventoryOpenEventHandler> openHandlers = new ArrayList<>();
-    private List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
+    private List<InventoryClickEventHandler> clickHandlers = new ArrayList<>();
     private List<InventoryCloseEventHandler> closeHandlers = new ArrayList<>();
 
     public InventoryBuilder() {
@@ -91,8 +92,13 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
+    public InventoryBuilder addInventoryClickHandler(EventPriority priority, Consumer<InventoryClickEvent> onInventoryClick) {
+        clickHandlers.add(new InventoryClickEventHandler(priority, onInventoryClick));
+        return this;
+    }
+
     public InventoryBuilder addInventoryClickHandler(Consumer<InventoryClickEvent> onInventoryClick) {
-        clickHandlers.add(onInventoryClick);
+        clickHandlers.add(new InventoryClickEventHandler(EventPriority.NORMAL, onInventoryClick));
         return this;
     }
 
@@ -106,8 +112,18 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
+    public InventoryBuilder addOpenHandler(Consumer<InventoryOpenEvent> onOpen) {
+        openHandlers.add(new InventoryOpenEventHandler(EventPriority.NORMAL, onOpen));
+        return this;
+    }
+
     public InventoryBuilder addCloseHandler(EventPriority priority, Consumer<InventoryCloseEvent> onClose) {
         closeHandlers.add(new InventoryCloseEventHandler(priority, onClose));
+        return this;
+    }
+
+    public InventoryBuilder addCloseHandler(Consumer<InventoryCloseEvent> onClose) {
+        closeHandlers.add(new InventoryCloseEventHandler(EventPriority.NORMAL, onClose));
         return this;
     }
 
@@ -124,7 +140,9 @@ public class InventoryBuilder implements Listener, Cloneable {
     private void handleClick(InventoryClickEvent event) {
         if (!Objects.equals(event.getClickedInventory(), inventory)) return;
 
-        clickHandlers.forEach(c -> c.accept(event));
+        clickHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
+            if (priority.equals(c.getPriority())) c.eventConsumer.accept(event);
+        }));
 
         Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(event.getRawSlot());
         if (clickConsumer != null) clickConsumer.accept(event);
