@@ -2,6 +2,7 @@ package api.bottleofench.fruitfulapi.builders.inventory;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.InventoryBuilderException;
+import api.bottleofench.fruitfulapi.util.event_consumer.SmallUtil;
 import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryCloseEventHandler;
 import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryOpenEventHandler;
 import net.kyori.adventure.text.Component;
@@ -132,27 +133,17 @@ public class InventoryBuilder implements Listener, Cloneable {
     @EventHandler
     private void handleOpen(InventoryOpenEvent event) {
         if (!event.getInventory().equals(inventory)) return;
-        openHandlers.forEach(c -> {
-            if (c.getPriority().equals(EventPriority.LOWEST)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.LOW)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.NORMAL)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.HIGH)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.HIGHEST)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.MONITOR)) { c.getEventConsumer().accept(event); return; }
-        });
+        openHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
+            if (priority.equals(c.getPriority())) c.eventConsumer.accept(event);
+        }));
     }
 
     @EventHandler
     private void handleClose(InventoryCloseEvent event) {
         if (!event.getInventory().equals(inventory)) return;
-        closeHandlers.forEach(c -> {
-            if (c.getPriority().equals(EventPriority.LOWEST)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.LOW)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.NORMAL)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.HIGH)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.HIGHEST)) { c.getEventConsumer().accept(event); return; }
-            if (c.getPriority().equals(EventPriority.MONITOR)) { c.getEventConsumer().accept(event); return; }
-        });
+        closeHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
+            if (priority.equals(c.getPriority())) c.eventConsumer.accept(event);
+        }));
     }
 
     @Override
