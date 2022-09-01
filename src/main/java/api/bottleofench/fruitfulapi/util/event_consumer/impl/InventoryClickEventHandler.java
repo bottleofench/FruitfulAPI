@@ -1,13 +1,12 @@
 package api.bottleofench.fruitfulapi.util.event_consumer.impl;
 
-import api.bottleofench.fruitfulapi.util.event_consumer.EventConsumer;
+import api.bottleofench.fruitfulapi.util.event_consumer.AbstractEventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import java.util.function.Consumer;
 
-public class InventoryClickEventHandler extends EventConsumer {
+public class InventoryClickEventHandler extends AbstractEventHandler {
     private final Consumer<InventoryClickEvent> eventConsumer;
 
     public InventoryClickEventHandler(EventPriority priority, Consumer<InventoryClickEvent> eventConsumer) {
