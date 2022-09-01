@@ -2,10 +2,13 @@ package api.bottleofench.fruitfulapi.builders.inventory;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.InventoryBuilderException;
+import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryCloseEventHandler;
+import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryOpenEventHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -21,9 +24,9 @@ import java.util.function.Consumer;
 public class InventoryBuilder implements Listener, Cloneable {
     private Inventory inventory;
     private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
-    private List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
+    private List<InventoryOpenEventHandler> openHandlers = new ArrayList<>();
     private List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
-    private List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
+    private List<InventoryCloseEventHandler> closeHandlers = new ArrayList<>();
 
     public InventoryBuilder() {
         inventory = Bukkit.createInventory(null, 27);
@@ -97,13 +100,13 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
-    public InventoryBuilder addOpenHandler(Consumer<InventoryOpenEvent> onOpen) {
-        openHandlers.add(onOpen);
+    public InventoryBuilder addOpenHandler(EventPriority priority, Consumer<InventoryOpenEvent> onOpen) {
+        openHandlers.add(new InventoryOpenEventHandler(priority, onOpen));
         return this;
     }
 
-    public InventoryBuilder addCloseHandler(Consumer<InventoryCloseEvent> onClose) {
-        closeHandlers.add(onClose);
+    public InventoryBuilder addCloseHandler(EventPriority priority, Consumer<InventoryCloseEvent> onClose) {
+        closeHandlers.add(new InventoryCloseEventHandler(priority, onClose));
         return this;
     }
 
@@ -129,13 +132,27 @@ public class InventoryBuilder implements Listener, Cloneable {
     @EventHandler
     private void handleOpen(InventoryOpenEvent event) {
         if (!event.getInventory().equals(inventory)) return;
-        openHandlers.forEach(c -> c.accept(event));
+        openHandlers.forEach(c -> {
+            if (c.getPriority().equals(EventPriority.LOWEST)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.LOW)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.NORMAL)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.HIGH)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.HIGHEST)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.MONITOR)) { c.getEventConsumer().accept(event); return; }
+        });
     }
 
     @EventHandler
     private void handleClose(InventoryCloseEvent event) {
         if (!event.getInventory().equals(inventory)) return;
-        closeHandlers.forEach(c -> c.accept(event));
+        closeHandlers.forEach(c -> {
+            if (c.getPriority().equals(EventPriority.LOWEST)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.LOW)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.NORMAL)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.HIGH)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.HIGHEST)) { c.getEventConsumer().accept(event); return; }
+            if (c.getPriority().equals(EventPriority.MONITOR)) { c.getEventConsumer().accept(event); return; }
+        });
     }
 
     @Override
