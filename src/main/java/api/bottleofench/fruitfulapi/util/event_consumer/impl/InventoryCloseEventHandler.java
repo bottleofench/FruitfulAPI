@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import java.util.function.Consumer;
 
 public class InventoryCloseEventHandler extends EventConsumer {
-    public final Consumer<InventoryCloseEvent> eventConsumer;
+    private final Consumer<InventoryCloseEvent> eventConsumer;
 
     public InventoryCloseEventHandler(EventPriority priority, Consumer<InventoryCloseEvent> eventConsumer) {
         super(priority);

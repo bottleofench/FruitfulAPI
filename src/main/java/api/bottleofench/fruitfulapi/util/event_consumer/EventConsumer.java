@@ -3,9 +3,9 @@ package api.bottleofench.fruitfulapi.util.event_consumer;
 import org.bukkit.event.EventPriority;
 
 public abstract class EventConsumer {
-    public final EventPriority priority;
+    private final EventPriority priority;
 
-    public EventConsumer(EventPriority priority) {
+    protected EventConsumer(EventPriority priority) {
         this.priority = priority;
     }
 

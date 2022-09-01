@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 public class InventoryBuilder implements Listener, Cloneable {
     private Inventory inventory;
-    private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
+    private Map<Integer, InventoryClickEventHandler> itemHandlers = new HashMap<>();
     private List<InventoryOpenEventHandler> openHandlers = new ArrayList<>();
     private List<InventoryClickEventHandler> clickHandlers = new ArrayList<>();
     private List<InventoryCloseEventHandler> closeHandlers = new ArrayList<>();
@@ -75,7 +75,7 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
-    public InventoryBuilder setItem(int index, ItemStack itemStack, Consumer<InventoryClickEvent>... consumers) {
+    public InventoryBuilder setItem(int index, ItemStack itemStack, InventoryClickEventHandler... consumers) {
         inventory.setItem(index, itemStack);
         List.of(consumers).forEach(inventoryClickEventConsumer -> itemHandlers.put(index, inventoryClickEventConsumer));
         return this;
@@ -102,7 +102,7 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
-    public InventoryBuilder addItemClickHandler(int rawSlot, Consumer<InventoryClickEvent> onItemClick) {
+    public InventoryBuilder addItemClickHandler(int rawSlot, InventoryClickEventHandler onItemClick) {
         itemHandlers.put(rawSlot, onItemClick);
         return this;
     }
@@ -141,26 +141,31 @@ public class InventoryBuilder implements Listener, Cloneable {
         if (!Objects.equals(event.getClickedInventory(), inventory)) return;
 
         clickHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
-            if (priority.equals(c.getPriority())) c.eventConsumer.accept(event);
+            if (priority.equals(c.getPriority())) c.getEventConsumer().accept(event);
         }));
 
-        Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(event.getRawSlot());
-        if (clickConsumer != null) clickConsumer.accept(event);
+        try {
+            InventoryClickEventHandler clickConsumer = itemHandlers.get(event.getRawSlot());
+            SmallUtil.getPriorityOrder().forEach(priority -> {
+                if (priority.equals(clickConsumer.getPriority())) clickConsumer.getEventConsumer().accept(event);
+            });
+        }
+        catch (NullPointerException ignored) {}
     }
 
     @EventHandler
     private void handleOpen(InventoryOpenEvent event) {
-        if (!event.getInventory().equals(inventory)) return;
+        if (!Objects.equals(event.getInventory(), inventory)) return;
         openHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
-            if (priority.equals(c.getPriority())) c.eventConsumer.accept(event);
+            if (priority.equals(c.getPriority())) c.getEventConsumer().accept(event);
         }));
     }
 
     @EventHandler
     private void handleClose(InventoryCloseEvent event) {
-        if (!event.getInventory().equals(inventory)) return;
+        if (!Objects.equals(event.getInventory(), inventory)) return;
         closeHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
-            if (priority.equals(c.getPriority())) c.eventConsumer.accept(event);
+            if (priority.equals(c.getPriority())) c.getEventConsumer().accept(event);
         }));
     }
 

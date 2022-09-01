@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import java.util.function.Consumer;
 
 public class InventoryClickEventHandler extends EventConsumer {
-    public final Consumer<InventoryClickEvent> eventConsumer;
+    private final Consumer<InventoryClickEvent> eventConsumer;
 
     public InventoryClickEventHandler(EventPriority priority, Consumer<InventoryClickEvent> eventConsumer) {
         super(priority);

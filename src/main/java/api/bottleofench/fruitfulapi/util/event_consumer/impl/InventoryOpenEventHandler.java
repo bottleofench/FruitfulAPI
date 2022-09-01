@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import java.util.function.Consumer;
 
 public class InventoryOpenEventHandler extends EventConsumer {
-    public final Consumer<InventoryOpenEvent> eventConsumer;
+    private final Consumer<InventoryOpenEvent> eventConsumer;
 
     public InventoryOpenEventHandler(EventPriority priority, Consumer<InventoryOpenEvent> eventConsumer) {
         super(priority);
