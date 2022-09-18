@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.EntityBlockFormEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -46,6 +47,17 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         ItemFrameCreateEvent e = new ItemFrameCreateEvent(event.getPlayer(), frame);
         getServer().getPluginManager().callEvent(e);
         if (e.isCancelled()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onChickenEggLay(ItemSpawnEvent event)  {
+        if (!event.getEntity().getItemStack().getType().equals(Material.EGG)) return;
+        for (Entity entity : event.getEntity().getNearbyEntities(0.01D, 0.3D, 0.01D)) {
+            if (!(entity instanceof Chicken chicken)) return;
+            ChickenLayEggEvent e = new ChickenLayEggEvent(chicken, event.getEntity());
+            getServer().getPluginManager().callEvent(e);
+            if (e.isCancelled()) event.setCancelled(true);
+        }
     }
 
     @EventHandler
