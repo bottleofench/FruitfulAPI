@@ -1,27 +1,19 @@
 package api.bottleofench.fruitfulapi;
 
-import api.bottleofench.fruitfulapi.builders.entity.LivingEntityBuilder;
-import api.bottleofench.fruitfulapi.builders.event.EventBuilder;
-import api.bottleofench.fruitfulapi.builders.itemstack.BookBuilder;
-import api.bottleofench.fruitfulapi.builders.itemstack.WeaponBuilder;
 import api.bottleofench.fruitfulapi.events.*;
 import com.destroystokyo.paper.MaterialTags;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.EntityBlockFormEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class FruitfulAPI extends JavaPlugin implements Listener {
@@ -35,14 +27,6 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-
-        Location location = null;
-
-        new EventBuilder(this).join(playerJoinEvent -> {
-            playerJoinEvent.getPlayer().sendMessage(Component.text("Hello!"));
-        }).blockBreak(blockBreakEvent -> {
-            blockBreakEvent.getPlayer().sendMessage(Component.text("You're broken the block!"));
-        });
 
         getServer().getPluginManager().registerEvents(this, this);
     }
@@ -63,6 +47,17 @@ public final class FruitfulAPI extends JavaPlugin implements Listener {
         ItemFrameCreateEvent e = new ItemFrameCreateEvent(event.getPlayer(), frame);
         getServer().getPluginManager().callEvent(e);
         if (e.isCancelled()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onChickenEggLay(ItemSpawnEvent event)  {
+        if (!event.getEntity().getItemStack().getType().equals(Material.EGG)) return;
+        for (Entity entity : event.getEntity().getNearbyEntities(0.01D, 0.3D, 0.01D)) {
+            if (!(entity instanceof Chicken chicken)) return;
+            ChickenLayEggEvent e = new ChickenLayEggEvent(chicken, event.getEntity());
+            getServer().getPluginManager().callEvent(e);
+            if (e.isCancelled()) event.setCancelled(true);
+        }
     }
 
     @EventHandler

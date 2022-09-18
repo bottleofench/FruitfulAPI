@@ -2,10 +2,15 @@ package api.bottleofench.fruitfulapi.builders.inventory;
 
 import api.bottleofench.fruitfulapi.FruitfulAPI;
 import api.bottleofench.fruitfulapi.exceptions.InventoryBuilderException;
+import api.bottleofench.fruitfulapi.util.event_consumer.SmallUtil;
+import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryClickEventHandler;
+import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryCloseEventHandler;
+import api.bottleofench.fruitfulapi.util.event_consumer.impl.InventoryOpenEventHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -20,10 +25,10 @@ import java.util.function.Consumer;
 
 public class InventoryBuilder implements Listener, Cloneable {
     private Inventory inventory;
-    private Map<Integer, Consumer<InventoryClickEvent>> itemHandlers = new HashMap<>();
-    private List<Consumer<InventoryOpenEvent>> openHandlers = new ArrayList<>();
-    private List<Consumer<InventoryClickEvent>> clickHandlers = new ArrayList<>();
-    private List<Consumer<InventoryCloseEvent>> closeHandlers = new ArrayList<>();
+    private Map<Integer, InventoryClickEventHandler> itemHandlers = new HashMap<>();
+    private List<InventoryOpenEventHandler> openHandlers = new ArrayList<>();
+    private List<InventoryClickEventHandler> clickHandlers = new ArrayList<>();
+    private List<InventoryCloseEventHandler> closeHandlers = new ArrayList<>();
 
     public InventoryBuilder() {
         inventory = Bukkit.createInventory(null, 27);
@@ -70,7 +75,7 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
-    public InventoryBuilder setItem(int index, ItemStack itemStack, Consumer<InventoryClickEvent>... consumers) {
+    public InventoryBuilder setItem(int index, ItemStack itemStack, InventoryClickEventHandler... consumers) {
         inventory.setItem(index, itemStack);
         List.of(consumers).forEach(inventoryClickEventConsumer -> itemHandlers.put(index, inventoryClickEventConsumer));
         return this;
@@ -87,23 +92,38 @@ public class InventoryBuilder implements Listener, Cloneable {
         return this;
     }
 
-    public InventoryBuilder addInventoryClickHandler(Consumer<InventoryClickEvent> onInventoryClick) {
-        clickHandlers.add(onInventoryClick);
+    public InventoryBuilder addInventoryClickHandler(EventPriority priority, Consumer<InventoryClickEvent> onInventoryClick) {
+        clickHandlers.add(new InventoryClickEventHandler(priority, onInventoryClick));
         return this;
     }
 
-    public InventoryBuilder addItemClickHandler(int rawSlot, Consumer<InventoryClickEvent> onItemClick) {
+    public InventoryBuilder addInventoryClickHandler(Consumer<InventoryClickEvent> onInventoryClick) {
+        clickHandlers.add(new InventoryClickEventHandler(EventPriority.NORMAL, onInventoryClick));
+        return this;
+    }
+
+    public InventoryBuilder addItemClickHandler(int rawSlot, InventoryClickEventHandler onItemClick) {
         itemHandlers.put(rawSlot, onItemClick);
         return this;
     }
 
+    public InventoryBuilder addOpenHandler(EventPriority priority, Consumer<InventoryOpenEvent> onOpen) {
+        openHandlers.add(new InventoryOpenEventHandler(priority, onOpen));
+        return this;
+    }
+
     public InventoryBuilder addOpenHandler(Consumer<InventoryOpenEvent> onOpen) {
-        openHandlers.add(onOpen);
+        openHandlers.add(new InventoryOpenEventHandler(EventPriority.NORMAL, onOpen));
+        return this;
+    }
+
+    public InventoryBuilder addCloseHandler(EventPriority priority, Consumer<InventoryCloseEvent> onClose) {
+        closeHandlers.add(new InventoryCloseEventHandler(priority, onClose));
         return this;
     }
 
     public InventoryBuilder addCloseHandler(Consumer<InventoryCloseEvent> onClose) {
-        closeHandlers.add(onClose);
+        closeHandlers.add(new InventoryCloseEventHandler(EventPriority.NORMAL, onClose));
         return this;
     }
 
@@ -120,22 +140,33 @@ public class InventoryBuilder implements Listener, Cloneable {
     private void handleClick(InventoryClickEvent event) {
         if (!Objects.equals(event.getClickedInventory(), inventory)) return;
 
-        clickHandlers.forEach(c -> c.accept(event));
+        clickHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
+            if (priority.equals(c.getPriority())) c.getEventConsumer().accept(event);
+        }));
 
-        Consumer<InventoryClickEvent> clickConsumer = itemHandlers.get(event.getRawSlot());
-        if (clickConsumer != null) clickConsumer.accept(event);
+        try {
+            InventoryClickEventHandler clickConsumer = itemHandlers.get(event.getRawSlot());
+            SmallUtil.getPriorityOrder().forEach(priority -> {
+                if (priority.equals(clickConsumer.getPriority())) clickConsumer.getEventConsumer().accept(event);
+            });
+        }
+        catch (NullPointerException ignored) {}
     }
 
     @EventHandler
     private void handleOpen(InventoryOpenEvent event) {
-        if (!event.getInventory().equals(inventory)) return;
-        openHandlers.forEach(c -> c.accept(event));
+        if (!Objects.equals(event.getInventory(), inventory)) return;
+        openHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
+            if (priority.equals(c.getPriority())) c.getEventConsumer().accept(event);
+        }));
     }
 
     @EventHandler
     private void handleClose(InventoryCloseEvent event) {
-        if (!event.getInventory().equals(inventory)) return;
-        closeHandlers.forEach(c -> c.accept(event));
+        if (!Objects.equals(event.getInventory(), inventory)) return;
+        closeHandlers.forEach(c -> SmallUtil.getPriorityOrder().forEach(priority -> {
+            if (priority.equals(c.getPriority())) c.getEventConsumer().accept(event);
+        }));
     }
 
     @Override
